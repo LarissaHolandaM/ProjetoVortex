@@ -2,12 +2,7 @@ import { useEffect, useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 const categories = ["Todos", "Livros", "Engenharia", "Computação", "Casa"];
-const seedItems = [
-  { id: "s1", titulo: "Kit de desenho técnico", descricao: "Esquadros, régua e compasso em ótimo estado.", categoria: "Engenharia", preco: 35, tipo_negociacao: "venda", localizacao: "Bloco C", imagem_url: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80" },
-  { id: "s2", titulo: "Cálculo I sem mistério", descricao: "Livro com marcações leves e muitos exercícios resolvidos.", categoria: "Livros", preco: 0, tipo_negociacao: "doacao", localizacao: "Biblioteca", imagem_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=900&q=80" },
-  { id: "s3", titulo: "Calculadora científica", descricao: "Funcionando perfeitamente, acompanha capa protetora.", categoria: "Computação", preco: 55, tipo_negociacao: "venda", localizacao: "Bloco A", imagem_url: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?auto=format&fit=crop&w=900&q=80" },
-  { id: "s4", titulo: "Jaleco branco tamanho M", descricao: "Lavado e pronto para uma nova rotina de laboratório.", categoria: "Engenharia", preco: 0, tipo_negociacao: "doacao", localizacao: "Centro acadêmico", imagem_url: "https://images.unsplash.com/photo-1584467735871-2e6f6c1a6a37?auto=format&fit=crop&w=900&q=80" },
-];
+const seedItems = [];
 
 function App() {
   const [items, setItems] = useState(seedItems);
