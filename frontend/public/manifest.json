@@ -1,0 +1,11 @@
+{
+  "name": "Vortex Marketplace",
+  "short_name": "Vortex",
+  "description": "Marketplace de economia circular do campus.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7ed",
+  "theme_color": "#001f3f",
+  "lang": "pt-BR",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
