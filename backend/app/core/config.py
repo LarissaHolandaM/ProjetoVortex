@@ -11,7 +11,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     PORT: int = 8000
-    CORS_ORIGINS: str = "https://projeto-vortex-seven.vercel.app"
+    CORS_ORIGINS: str = ""
+    CORS_REGEX: str | None = None
 
     class Config:
         env_file = ".env"
