@@ -20,7 +20,7 @@ cd ProjetoVortex
 No Windows PowerShell:
 
 ```powershell
-cd Backend\Backend
+cd Backend
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
@@ -32,7 +32,7 @@ python -m uvicorn app.main:app --reload
 No macOS/Linux:
 
 ```bash
-cd Backend/Backend
+cd Backend
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -72,13 +72,13 @@ npm run build
 Backend:
 
 ```bash
-cd Backend/Backend
+cd Backend
 .venv/Scripts/python -m pytest -q  # Windows: .venv\Scripts\python.exe -m pytest -q
 ```
 
 ## Integração
 
-O frontend consome a API nos endpoints de autenticação e anúncios. O backend permite as origens padrão do Vite via `CORS_ORIGINS`, configurada em `Backend/Backend/.env.example`.
+O frontend consome a API nos endpoints de autenticação e anúncios. O backend permite as origens padrão do Vite via `CORS_ORIGINS`, configurada em `Backend/.env.example`.
 
 Rotas principais:
 
@@ -94,5 +94,5 @@ Rotas principais:
 ## Estrutura
 
 - `frontend/`: aplicação React com Vite
-- `Backend/Backend/`: API FastAPI, autenticação JWT e persistência SQLite
+- `Backend/`: API FastAPI, autenticação JWT e persistência SQLite
 - `.gitignore`: ignora dependências, ambientes virtuais, builds, caches, banco local e arquivos `.env`
