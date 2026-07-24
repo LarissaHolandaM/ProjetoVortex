@@ -13,12 +13,12 @@ frontend/dist-ssr/
 frontend/.env
 
 # Backend local environment and generated files
-Backend/.venv/
-Backend/__pycache__/
-Backend/**/__pycache__/
-Backend/.pytest_cache/
-Backend/*.db
-Backend/.env
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/*.db
+backend/.env
 *.local
 
 # Editor directories and files
