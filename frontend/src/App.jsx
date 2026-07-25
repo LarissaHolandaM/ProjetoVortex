@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getItemImage } from "./utils/marketplace";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 const categories = ["Todos", "Livros", "Engenharia", "Computação", "Casa"];
@@ -38,10 +39,10 @@ function App() {
   const submitAd = async (event) => {
     event.preventDefault();
     const payload = { ...form, preco: form.tipo_negociacao === "doacao" ? 0 : Number(form.preco) };
-    try { const response = await fetch(`${API_URL}/anuncios/`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("vortex-token") || "demo"}` }, body: JSON.stringify(payload) }); if (!response.ok) throw new Error(); setItems([(await response.json()), ...items]); } catch { setItems([{ ...payload, id: `local-${Date.now()}`, usuario_id: user.id, imagem_url: payload.imagem_url || seedItems[0].imagem_url }, ...items]); }
+    try { const response = await fetch(`${API_URL}/anuncios/`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("vortex-token") || "demo"}` }, body: JSON.stringify(payload) }); if (!response.ok) throw new Error(); setItems([(await response.json()), ...items]); } catch { setItems([{ ...payload, id: `local-${Date.now()}`, usuario_id: user.id, imagem_url: payload.imagem_url || FALLBACK_IMAGE }, ...items]); }
     setForm({ titulo: "", descricao: "", categoria: "Livros", preco: "", tipo_negociacao: "venda", localizacao: "", imagem_url: "" }); setModal(null); setNotice("Anúncio publicado com sucesso.");
   };
-  const Card = ({ item }) => <article className="item-card"><div className="item-image"><img src={item.imagem_url || seedItems[0].imagem_url} alt={item.titulo} /><span className={item.tipo_negociacao === "doacao" ? "tag donation" : "tag"}>{item.tipo_negociacao === "doacao" ? "Doação" : "À venda"}</span><button className="heart" aria-label="Salvar item">♡</button></div><div className="item-content"><p className="item-category">{item.categoria} · {item.localizacao || "Campus"}</p><h3>{item.titulo}</h3><p className="item-description">{item.descricao}</p><div className="item-footer"><strong>{item.tipo_negociacao === "doacao" || Number(item.preco) === 0 ? "Grátis" : `R$ ${Number(item.preco).toFixed(2).replace(".", ",")}`}</strong><button onClick={() => setNotice("Em breve você poderá conversar com o anunciante.")}>Ver item ↗</button></div></div></article>;
+  const Card = ({ item }) => <article className="item-card"><div className="item-image"><img src={getItemImage(item)} alt={item.titulo} /><span className={item.tipo_negociacao === "doacao" ? "tag donation" : "tag"}>{item.tipo_negociacao === "doacao" ? "Doação" : "À venda"}</span><button className="heart" aria-label="Salvar item">♡</button></div><div className="item-content"><p className="item-category">{item.categoria} · {item.localizacao || "Campus"}</p><h3>{item.titulo}</h3><p className="item-description">{item.descricao}</p><div className="item-footer"><strong>{item.tipo_negociacao === "doacao" || Number(item.preco) === 0 ? "Grátis" : `R$ ${Number(item.preco).toFixed(2).replace(".", ",")}`}</strong><button onClick={() => setNotice("Em breve você poderá conversar com o anunciante.")}>Ver item ↗</button></div></div></article>;
   return (
     <div className="app-shell">
       <header className="topbar">
