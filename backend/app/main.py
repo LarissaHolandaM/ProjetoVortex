@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import anuncios, auth, uploads
+from app.api.routes import anuncios, auth, favoritos, uploads
 from app.core.config import get_port, settings
 from app.core.database import Base, engine
 from app.middleware.exception_handler import register_exception_handlers
@@ -27,6 +27,7 @@ register_exception_handlers(app)
 
 app.include_router(auth.router)
 app.include_router(anuncios.router)
+app.include_router(favoritos.router)
 app.include_router(uploads.router)
 
 

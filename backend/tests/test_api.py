@@ -242,3 +242,87 @@ def test_update_and_delete_anuncio():
 
     assert delete_response.status_code == 200
     assert delete_response.json()["message"] == "Anúncio removido com sucesso"
+
+
+def test_favoritar_e_listar_favoritos():
+    dono = client.post(
+        "/auth/register",
+        json={"nome": "Gustavo", "email": "gustavo@email.com", "senha": "123456"},
+    )
+    dono_headers = {"Authorization": f"Bearer {dono.json()['access_token']}"}
+
+    anuncio = client.post(
+        "/anuncios/",
+        json={
+            "titulo": "Bicicleta Aro 29",
+            "descricao": "Pouco uso, revisada",
+            "preco": 800,
+        },
+        headers=dono_headers,
+    )
+    anuncio_id = anuncio.json()["id"]
+
+    interessado = client.post(
+        "/auth/register",
+        json={"nome": "Helena", "email": "helena@email.com", "senha": "123456"},
+    )
+    headers = {"Authorization": f"Bearer {interessado.json()['access_token']}"}
+
+    add_response = client.post(f"/favoritos/{anuncio_id}", headers=headers)
+    assert add_response.status_code == 201
+    assert add_response.json()["message"] == "Anúncio adicionado aos favoritos"
+
+    # favoritar de novo deve ser idempotente (não duplica, não quebra)
+    repeat_response = client.post(f"/favoritos/{anuncio_id}", headers=headers)
+    assert repeat_response.status_code == 201
+
+    ids_response = client.get("/favoritos/ids", headers=headers)
+    assert ids_response.status_code == 200
+    assert ids_response.json() == [anuncio_id]
+
+    list_response = client.get("/favoritos/", headers=headers)
+    assert list_response.status_code == 200
+    body = list_response.json()
+    assert body["total"] == 1
+    assert body["items"][0]["titulo"] == "Bicicleta Aro 29"
+
+    remove_response = client.delete(f"/favoritos/{anuncio_id}", headers=headers)
+    assert remove_response.status_code == 200
+    assert remove_response.json()["message"] == "Anúncio removido dos favoritos"
+
+    empty_response = client.get("/favoritos/", headers=headers)
+    assert empty_response.json()["total"] == 0
+
+
+def test_favoritar_anuncio_inexistente_retorna_404():
+    usuario = client.post(
+        "/auth/register",
+        json={"nome": "Igor", "email": "igor@email.com", "senha": "123456"},
+    )
+    headers = {"Authorization": f"Bearer {usuario.json()['access_token']}"}
+
+    response = client.post("/favoritos/9999", headers=headers)
+    assert response.status_code == 404
+
+
+def test_remover_favorito_inexistente_retorna_404():
+    usuario = client.post(
+        "/auth/register",
+        json={"nome": "Julia", "email": "julia@email.com", "senha": "123456"},
+    )
+    headers = {"Authorization": f"Bearer {usuario.json()['access_token']}"}
+
+    anuncio = client.post(
+        "/anuncios/",
+        json={"titulo": "Fone Bluetooth", "descricao": "Seminovo", "preco": 90},
+        headers=headers,
+    )
+    anuncio_id = anuncio.json()["id"]
+
+    response = client.delete(f"/favoritos/{anuncio_id}", headers=headers)
+    assert response.status_code == 404
+
+
+def test_favoritos_requer_autenticacao():
+    response = client.get("/favoritos/")
+    assert response.status_code == 401

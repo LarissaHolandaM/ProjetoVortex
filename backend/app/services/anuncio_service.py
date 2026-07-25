@@ -5,12 +5,14 @@ from sqlalchemy.orm import Session
 from app.core.exceptions import NotFoundError, ValidationError
 from app.models.anuncio import Anuncio
 from app.repositories.anuncio_repository import AnuncioRepository
+from app.repositories.favorito_repository import FavoritoRepository
 from app.schemas.anuncio import AnuncioCreate, AnuncioUpdate
 
 
 class AnuncioService:
     def __init__(self, db: Session):
         self.repository = AnuncioRepository(db)
+        self.favorito_repository = FavoritoRepository(db)
 
     def create(self, anuncio_data: AnuncioCreate, usuario_id: int) -> Anuncio:
         if not anuncio_data.titulo or len(anuncio_data.titulo.strip()) < 3:
@@ -111,4 +113,5 @@ class AnuncioService:
         anuncio = self.get_by_id(anuncio_id)
         if anuncio.usuario_id != usuario_id:
             raise ValidationError("Você não pode remover este anúncio")
+        self.favorito_repository.delete_by_anuncio(anuncio_id)
         self.repository.delete(anuncio)
