@@ -15,6 +15,10 @@ class AnuncioService:
     def create(self, anuncio_data: AnuncioCreate, usuario_id: int) -> Anuncio:
         if not anuncio_data.titulo or len(anuncio_data.titulo.strip()) < 3:
             raise ValidationError("Título inválido")
+        imagem_url = anuncio_data.imagem_url
+        if anuncio_data.imagem_nome and not imagem_url:
+            imagem_url = f"/uploads/{anuncio_data.imagem_nome}"
+
         anuncio = Anuncio(
             titulo=anuncio_data.titulo,
             descricao=anuncio_data.descricao,
@@ -23,7 +27,7 @@ class AnuncioService:
             tipo_negociacao=anuncio_data.tipo_negociacao,
             condicao=anuncio_data.condicao,
             localizacao=anuncio_data.localizacao,
-            imagem_url=anuncio_data.imagem_url,
+            imagem_url=imagem_url,
             usuario_id=usuario_id,
         )
         return self.repository.create(anuncio)

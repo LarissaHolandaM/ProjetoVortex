@@ -14,6 +14,10 @@ export function buildAdPayload(form) {
     delete normalized.imagem_url;
   }
 
+  if (!normalized.imagem_nome || !normalized.imagem_nome.trim()) {
+    delete normalized.imagem_nome;
+  }
+
   return normalized;
 }
 
