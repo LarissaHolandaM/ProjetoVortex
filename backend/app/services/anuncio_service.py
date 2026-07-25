@@ -30,6 +30,7 @@ class AnuncioService:
             condicao=anuncio_data.condicao,
             localizacao=anuncio_data.localizacao,
             imagem_url=imagem_url,
+            contato=anuncio_data.contato,
             usuario_id=usuario_id,
         )
         return self.repository.create(anuncio)
@@ -106,6 +107,8 @@ class AnuncioService:
             anuncio.localizacao = anuncio_data.localizacao
         if anuncio_data.imagem_url is not None:
             anuncio.imagem_url = anuncio_data.imagem_url
+        if anuncio_data.contato is not None:
+            anuncio.contato = anuncio_data.contato
 
         return self.repository.update(anuncio)
 

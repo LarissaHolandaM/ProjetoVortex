@@ -16,6 +16,7 @@ class Anuncio(Base):
     condicao = Column(String(30), nullable=False, default="novo")
     localizacao = Column(String(100), nullable=False, default="Campus")
     imagem_url = Column(String(500), nullable=True)
+    contato = Column(String(150), nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
 
     usuario = relationship("Usuario", back_populates="anuncios")

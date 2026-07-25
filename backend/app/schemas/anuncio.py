@@ -13,6 +13,7 @@ class AnuncioCreate(BaseModel):
     localizacao: str = Field(default="Campus", min_length=2, max_length=100)
     imagem_url: Optional[str] = Field(default=None, max_length=500)
     imagem_nome: Optional[str] = Field(default=None, max_length=255)
+    contato: str = Field(..., min_length=5, max_length=150)
 
 
 class AnuncioUpdate(BaseModel):
@@ -24,6 +25,7 @@ class AnuncioUpdate(BaseModel):
     condicao: Optional[str] = Field(None, pattern="^(novo|usado|bom_estado|defeito)$")
     localizacao: Optional[str] = Field(None, min_length=2, max_length=100)
     imagem_url: Optional[str] = Field(None, max_length=500)
+    contato: Optional[str] = Field(None, min_length=5, max_length=150)
 
 
 class AnuncioResponse(BaseModel):
@@ -39,4 +41,5 @@ class AnuncioResponse(BaseModel):
     localizacao: str
     imagem_url: Optional[str] = None
     imagem_nome: Optional[str] = None
+    contato: str
     usuario_id: int

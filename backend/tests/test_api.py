@@ -81,6 +81,7 @@ def test_create_anuncio_with_authenticated_user():
             "titulo": "Notebook Gamer",
             "descricao": "RTX 3060",
             "preco": 4200.5,
+            "contato": "bruno@email.com",
         },
         headers=headers,
     )
@@ -110,6 +111,7 @@ def test_list_anuncios_with_pagination_and_filter():
             "titulo": "Notebook Dell",
             "descricao": "i7 16gb",
             "preco": 3000,
+            "contato": "carla@email.com",
         },
         headers=headers,
     )
@@ -119,6 +121,7 @@ def test_list_anuncios_with_pagination_and_filter():
             "titulo": "Carro Popular",
             "descricao": "ano 2017",
             "preco": 18000,
+            "contato": "carla@email.com",
         },
         headers=headers,
     )
@@ -156,6 +159,7 @@ def test_create_anuncio_with_marketplace_fields():
             "condicao": "bom_estado",
             "localizacao": "Bloco B",
             "imagem_url": "https://example.com/livro.jpg",
+            "contato": "elisa@email.com",
         },
         headers=headers,
     )
@@ -167,6 +171,7 @@ def test_create_anuncio_with_marketplace_fields():
     assert body["condicao"] == "bom_estado"
     assert body["localizacao"] == "Bloco B"
     assert body["imagem_url"] == "https://example.com/livro.jpg"
+    assert body["contato"] == "elisa@email.com"
 
 
 def test_list_my_anuncios():
@@ -192,6 +197,7 @@ def test_list_my_anuncios():
             "tipo_negociacao": "venda",
             "condicao": "usado",
             "localizacao": "Bloco C",
+            "contato": "fabio@email.com",
         },
         headers=headers,
     )
@@ -223,6 +229,7 @@ def test_update_and_delete_anuncio():
             "titulo": "Mesa de Escritório",
             "descricao": "Madeira maciça",
             "preco": 450,
+            "contato": "davi@email.com",
         },
         headers=headers,
     )
@@ -257,6 +264,7 @@ def test_favoritar_e_listar_favoritos():
             "titulo": "Bicicleta Aro 29",
             "descricao": "Pouco uso, revisada",
             "preco": 800,
+            "contato": "gustavo@email.com",
         },
         headers=dono_headers,
     )
@@ -314,7 +322,7 @@ def test_remover_favorito_inexistente_retorna_404():
 
     anuncio = client.post(
         "/anuncios/",
-        json={"titulo": "Fone Bluetooth", "descricao": "Seminovo", "preco": 90},
+        json={"titulo": "Fone Bluetooth", "descricao": "Seminovo", "preco": 90, "contato": "julia@email.com"},
         headers=headers,
     )
     anuncio_id = anuncio.json()["id"]
@@ -326,3 +334,19 @@ def test_remover_favorito_inexistente_retorna_404():
 def test_favoritos_requer_autenticacao():
     response = client.get("/favoritos/")
     assert response.status_code == 401
+
+
+def test_criar_anuncio_sem_contato_retorna_422():
+    register_response = client.post(
+        "/auth/register",
+        json={"nome": "Karen", "email": "karen@email.com", "senha": "123456"},
+    )
+    headers = {"Authorization": f"Bearer {register_response.json()['access_token']}"}
+
+    response = client.post(
+        "/anuncios/",
+        json={"titulo": "Cadeira Gamer", "descricao": "Pouco uso", "preco": 300},
+        headers=headers,
+    )
+
+    assert response.status_code == 422
