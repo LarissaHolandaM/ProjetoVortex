@@ -1,10 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { buildAdPayload, getItemImage, FALLBACK_IMAGE } from "./marketplace.js";
+import { buildAdPayload, getItemImage, FALLBACK_IMAGE } from "./marketplace.ts";
+import type { AdFormState } from "../types";
 
 test("buildAdPayload omits empty image and converts donations to free", () => {
-  const payload = buildAdPayload({
+  const form: AdFormState = {
     titulo: "Livro de Cálculo",
     descricao: "Excelente estado",
     categoria: "Livros",
@@ -12,7 +13,8 @@ test("buildAdPayload omits empty image and converts donations to free", () => {
     tipo_negociacao: "doacao",
     localizacao: "",
     imagem_url: "   ",
-  });
+  };
+  const payload = buildAdPayload(form);
 
   assert.equal(payload.preco, 0);
   assert.equal(payload.titulo, "Livro de Cálculo");
@@ -21,5 +23,5 @@ test("buildAdPayload omits empty image and converts donations to free", () => {
 });
 
 test("getItemImage uses fallback when the image URL is missing", () => {
-  assert.equal(getItemImage({ titulo: "Caneta" }), FALLBACK_IMAGE);
+  assert.equal(getItemImage({ imagem_url: undefined }), FALLBACK_IMAGE);
 });

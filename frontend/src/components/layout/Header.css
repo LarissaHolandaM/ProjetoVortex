@@ -1,0 +1,90 @@
+.topbar {
+  height: 82px;
+  padding: 0 clamp(22px, 5vw, 76px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  background: transparent;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -1px;
+}
+
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  background: var(--lime);
+  border-radius: 50%;
+  font-size: 25px;
+}
+
+.brand-dot {
+  color: var(--green);
+  font-style: normal;
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 34px;
+  margin-left: 90px;
+}
+
+.desktop-nav button,
+.text-button {
+  background: transparent;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.desktop-nav button:hover,
+.text-button:hover {
+  color: var(--green);
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.button {
+  background: var(--green);
+  color: white;
+  padding: 15px 22px;
+  border-radius: 2px;
+  font-weight: 600;
+  display: inline-flex;
+  gap: 14px;
+  transition: 0.2s;
+}
+
+.button:hover {
+  background: var(--ink);
+  transform: translateY(-2px);
+}
+
+.button-small {
+  padding: 11px 16px;
+  font-size: 13px;
+}
+
+@media (max-width: 850px) {
+  .topbar {
+    height: 68px;
+  }
+
+  .desktop-nav,
+  .top-actions .text-button {
+    display: none;
+  }
+}

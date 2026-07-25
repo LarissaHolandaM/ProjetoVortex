@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --ink: #001f3f;
+  --green: #00804c;
+  --lime: #dbe64c;
+  --mint: #f6f7ed;
+  --line: rgba(0, 31, 63, 0.14);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--mint);
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+em {
+  color: var(--green);
+  font-style: normal;
+}
