@@ -22,6 +22,7 @@ export function buildAdPayload(form: AdFormState) {
     descricao: form.descricao?.trim(),
     categoria: form.categoria?.trim() || "Geral",
     localizacao: form.localizacao?.trim() || "Campus",
+    contato: form.contato?.trim(),
     preco: form.tipo_negociacao === "doacao" ? 0 : Number(form.preco || 0),
   };
 

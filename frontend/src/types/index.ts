@@ -13,6 +13,7 @@ export interface Item {
   localizacao?: string;
   imagem_url?: string;
   imagem_nome?: string;
+  contato: string;
   usuario_id: number | string;
 }
 
@@ -30,6 +31,7 @@ export interface AdFormState {
   tipo_negociacao: TipoNegociacao;
   localizacao: string;
   imagem_url: string;
+  contato: string;
 }
 
 export type ModalType = "auth" | "publish" | null;

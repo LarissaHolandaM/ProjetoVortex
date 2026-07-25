@@ -104,6 +104,17 @@ export function PublishModal({ categories, form, isEditing, onChange, onClose, o
               placeholder="https://... (opcional)"
             />
           </label>
+          <label>
+            Contato para o comprador
+            <input
+              name="contato"
+              value={form.contato}
+              onChange={onChange}
+              placeholder="WhatsApp, e-mail ou telefone"
+              minLength={5}
+              required
+            />
+          </label>
           <button className="button" type="submit">
             {isEditing ? "Salvar alterações ↗" : "Publicar anúncio ↗"}
           </button>

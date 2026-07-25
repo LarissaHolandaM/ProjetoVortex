@@ -28,6 +28,7 @@ const emptyForm: AdFormState = {
   tipo_negociacao: "venda",
   localizacao: "",
   imagem_url: "",
+  contato: "",
 };
 
 function itemToForm(item: Item): AdFormState {
@@ -39,6 +40,7 @@ function itemToForm(item: Item): AdFormState {
     tipo_negociacao: item.tipo_negociacao,
     localizacao: item.localizacao || "",
     imagem_url: item.imagem_url || "",
+    contato: item.contato || "",
   };
 }
 

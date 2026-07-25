@@ -45,6 +45,9 @@ export function ItemDetailModal({
             <strong>Condição:</strong> {getCondicaoLabel(item.condicao)}
           </span>
         </div>
+        <div className="item-detail-contact">
+          <strong>Contato:</strong> {item.contato}
+        </div>
         <div className="item-detail-actions">
           <button className="button" onClick={() => onToggleFavorite(item)}>
             {isFavorite ? "♥ Remover dos favoritos" : "♡ Favoritar"}
@@ -60,7 +63,6 @@ export function ItemDetailModal({
             </>
           )}
         </div>
-        {!isOwner && <small>Em breve você poderá conversar diretamente com o anunciante por aqui.</small>}
       </div>
     </div>
   );

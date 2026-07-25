@@ -52,6 +52,20 @@
   color: var(--ink);
 }
 
+.item-detail-contact {
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--mint);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 22px;
+}
+
+.item-detail-contact strong {
+  color: var(--green);
+}
+
 .item-detail-actions {
   display: flex;
   flex-wrap: wrap;

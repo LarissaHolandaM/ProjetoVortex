@@ -13,12 +13,14 @@ test("buildAdPayload omits empty image and converts donations to free", () => {
     tipo_negociacao: "doacao",
     localizacao: "",
     imagem_url: "   ",
+    contato: "  fulano@email.com  ",
   };
   const payload = buildAdPayload(form);
 
   assert.equal(payload.preco, 0);
   assert.equal(payload.titulo, "Livro de Cálculo");
   assert.equal(payload.localizacao, "Campus");
+  assert.equal(payload.contato, "fulano@email.com");
   assert.equal("imagem_url" in payload, false);
 });
 
