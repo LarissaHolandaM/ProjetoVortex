@@ -7,36 +7,16 @@
   display: grid;
   gap: 10px;
   justify-items: center;
-  align-content: center;
-  min-height: 100%;
-  margin: auto;
-}
-
-.help-modal-tape {
-  font: 11px "DM Mono", monospace;
-  letter-spacing: 2px;
-  color: var(--ink);
-  background: repeating-linear-gradient(
-    45deg,
-    #ffcc00,
-    #ffcc00 10px,
-    #111 10px,
-    #111 20px
-  );
-  color: #111;
-  padding: 6px 12px;
-  border-radius: 3px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .help-modal-image {
   width: 100%;
-  max-width: 280px;
+  max-width: 220px;
   aspect-ratio: 640 / 456;
   object-fit: cover;
   border-radius: 10px;
-  margin: 10px 0;
-  box-shadow: 5px 5px 0 var(--lime);
+  margin: 4px 0 10px;
+  box-shadow: 0 0 0 4px var(--lime);
 }
 
 .help-modal h2 {

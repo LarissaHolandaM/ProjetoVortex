@@ -13,7 +13,6 @@ export function HelpModal({ onClose }: HelpModalProps) {
           ×
         </button>
         <div className="help-modal-body">
-          <p className="help-modal-tape">🚧 EM CONSTRUÇÃO 🚧</p>
           <img
             className="help-modal-image"
             src="/images/homens-trabalhando.jpg"
