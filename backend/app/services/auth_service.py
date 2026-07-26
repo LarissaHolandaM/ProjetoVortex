@@ -5,7 +5,7 @@ from app.core.security import create_access_token, hash_password, verify_passwor
 from app.models.usuario import Usuario
 from app.repositories.usuario_repository import UsuarioRepository
 from app.schemas.auth import LoginRequest
-from app.schemas.usuario import UsuarioCreate
+from app.schemas.usuario import UsuarioCreate, UsuarioUpdate
 
 
 class AuthService:
@@ -32,3 +32,20 @@ class AuthService:
 
         token = create_access_token(usuario.id)
         return usuario, token
+
+    def update_profile(self, usuario: Usuario, dados: UsuarioUpdate) -> Usuario:
+        if dados.email and dados.email != usuario.email:
+            existente = self.repository.get_by_email(str(dados.email))
+            if existente and existente.id != usuario.id:
+                raise ValidationError("E-mail já cadastrado")
+            usuario.email = str(dados.email)
+
+        if dados.nome:
+            usuario.nome = dados.nome
+
+        if dados.nova_senha:
+            if not dados.senha_atual or not verify_password(dados.senha_atual, usuario.senha_hash):
+                raise ValidationError("Senha atual incorreta")
+            usuario.senha_hash = hash_password(dados.nova_senha)
+
+        return self.repository.update(usuario)

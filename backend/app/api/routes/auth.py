@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
 from app.core.database import get_db
+from app.models.usuario import Usuario
 from app.schemas.auth import LoginRequest, TokenResponse
 from app.schemas.response import MessageResponse
-from app.schemas.usuario import UsuarioCreate, UsuarioResponse
+from app.schemas.usuario import UsuarioCreate, UsuarioResponse, UsuarioUpdate
 from app.services.auth_service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -36,3 +37,13 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UsuarioResponse)
 def me(current_user=Depends(get_current_user)):
     return current_user
+
+
+@router.put("/me", response_model=UsuarioResponse)
+def update_me(
+    dados: UsuarioUpdate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    service = AuthService(db)
+    return service.update_profile(current_user, dados)
