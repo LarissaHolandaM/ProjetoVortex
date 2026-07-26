@@ -9,6 +9,7 @@ import { MarketplaceSection } from "./components/marketplace/MarketplaceSection"
 import { AuthModal } from "./components/modals/AuthModal";
 import { PublishModal } from "./components/modals/PublishModal";
 import { ItemDetailModal } from "./components/modals/ItemDetailModal";
+import { HelpModal } from "./components/modals/HelpModal";
 import { StudentArea } from "./components/student/StudentArea";
 import { Toast } from "./components/ui/Toast";
 import { useAuth } from "./hooks/useAuth";
@@ -25,6 +26,7 @@ const emptyForm: AdFormState = {
   categorias: [],
   preco: "",
   tipo_negociacao: "venda",
+  condicao: "novo",
   localizacao: "",
   imagem_url: "",
   contato: "",
@@ -37,6 +39,7 @@ function itemToForm(item: Item): AdFormState {
     categorias: item.categorias?.length ? item.categorias : [item.categoria],
     preco: String(item.preco),
     tipo_negociacao: item.tipo_negociacao,
+    condicao: item.condicao || "novo",
     localizacao: item.localizacao || "",
     imagem_url: item.imagem_url || "",
     contato: item.contato || "",
@@ -48,18 +51,24 @@ function errorMessage(error: unknown, fallback: string): string {
 }
 
 function App() {
-  const { user, loginUser, registerUser, updateUser } = useAuth();
+  const { user, loginUser, registerUser, logout, updateUser } = useAuth();
   const {
     filtered,
     total,
-    category,
-    setCategory,
+    categorias,
+    toggleCategoria,
     query,
     setQuery,
     tipoNegociacao,
     setTipoNegociacao,
+    condicaoFiltro,
+    setCondicaoFiltro,
     localizacao,
     setLocalizacao,
+    precoMin,
+    setPrecoMin,
+    precoMax,
+    setPrecoMax,
     ordenacao,
     setOrdenacao,
     sellerName,
@@ -82,6 +91,12 @@ function App() {
 
   const goHome = () => setView("home");
   const openProfile = () => (user ? setView("mine") : setModal("auth"));
+  const openHelp = () => setModal("help");
+  const handleLogout = () => {
+    logout();
+    setView("home");
+    setNotice("Você saiu da sua conta.");
+  };
   const openPublish = () => {
     if (!user) {
       setModal("auth");
@@ -200,14 +215,20 @@ function App() {
         <HeroSection onExplore={() => scrollToId("marketplace")} onPublish={openPublish} />
         <StatStrip totalItens={total} totalCategorias={CATEGORIAS.length} />
         <MarketplaceSection
-          category={category}
-          onCategoryChange={setCategory}
+          categorias={categorias}
+          onToggleCategoria={toggleCategoria}
           query={query}
           onQueryChange={setQuery}
           tipoNegociacao={tipoNegociacao}
           onTipoNegociacaoChange={setTipoNegociacao}
+          condicao={condicaoFiltro}
+          onCondicaoChange={setCondicaoFiltro}
           localizacao={localizacao}
           onLocalizacaoChange={setLocalizacao}
+          precoMin={precoMin}
+          onPrecoMinChange={setPrecoMin}
+          precoMax={precoMax}
+          onPrecoMaxChange={setPrecoMax}
           ordenacao={ordenacao}
           onOrdenacaoChange={setOrdenacao}
           sellerName={sellerName}
@@ -221,7 +242,7 @@ function App() {
         <Manifesto onPublish={openPublish} />
       </main>
 
-      <Footer />
+      <Footer onOpenHelp={openHelp} />
       <MobileNav onNavigateHome={goHome} onOpenPublish={openPublish} onOpenProfile={openProfile} />
 
       {view === "mine" && (
@@ -236,10 +257,12 @@ function App() {
           onDelete={handleDeleteItem}
           refreshKey={meusRefreshKey}
           onUpdateProfile={handleUpdateProfile}
+          onLogout={handleLogout}
         />
       )}
 
       {modal === "auth" && <AuthModal onClose={() => setModal(null)} onSubmit={submitAuth} />}
+      {modal === "help" && <HelpModal onClose={() => setModal(null)} />}
       {modal === "publish" && (
         <PublishModal
           form={form}

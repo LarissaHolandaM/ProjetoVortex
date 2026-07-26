@@ -1,6 +1,7 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { CATEGORIAS } from "../../types";
-import type { AdFormState } from "../../types";
+import type { AdFormState, Condicao } from "../../types";
+import { CONDICAO_LABELS } from "../../utils/marketplace";
 import "./Modal.css";
 
 interface PublishModalProps {
@@ -92,11 +93,23 @@ export function PublishModal({
                 onChange={onChange}
                 type="number"
                 min="0"
+                step="0.01"
+                inputMode="decimal"
                 disabled={form.tipo_negociacao === "doacao"}
                 placeholder="0,00"
               />
             </label>
           </div>
+          <label>
+            Condição do item
+            <select name="condicao" value={form.condicao} onChange={onChange}>
+              {(Object.keys(CONDICAO_LABELS) as Condicao[]).map((condicao) => (
+                <option key={condicao} value={condicao}>
+                  {CONDICAO_LABELS[condicao]}
+                </option>
+              ))}
+            </select>
+          </label>
           <label>
             Localização
             <input

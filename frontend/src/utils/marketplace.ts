@@ -1,6 +1,6 @@
 import type { AdFormState, Condicao, Item } from "../types";
 
-const CONDICAO_LABELS: Record<Condicao, string> = {
+export const CONDICAO_LABELS: Record<Condicao, string> = {
   novo: "Novo",
   usado: "Usado",
   bom_estado: "Bom estado",
@@ -29,6 +29,7 @@ export function buildAdPayload(form: AdFormState) {
     categorias,
     localizacao: form.localizacao?.trim() || "Campus",
     tipo_negociacao: form.tipo_negociacao,
+    condicao: form.condicao || "novo",
     contato: form.contato?.trim(),
     preco: form.tipo_negociacao === "doacao" ? 0 : Number(form.preco || 0),
     imagem_url: form.imagem_url,

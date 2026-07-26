@@ -46,6 +46,7 @@ export interface AdFormState {
   categorias: string[];
   preco: string;
   tipo_negociacao: TipoNegociacao;
+  condicao: Condicao;
   localizacao: string;
   imagem_url: string;
   contato: string;
@@ -58,7 +59,7 @@ export interface ProfileFormState {
   nova_senha: string;
 }
 
-export type ModalType = "auth" | "publish" | null;
+export type ModalType = "auth" | "publish" | "help" | null;
 
 export type ViewType = "home" | "mine";
 
@@ -67,9 +68,12 @@ export type AuthMode = "login" | "register";
 export type StudentTab = "meus" | "favoritos" | "perfil";
 
 export interface AnuncioFiltros {
-  categoria?: string;
+  categorias?: string[];
   tipoNegociacao?: string;
+  condicao?: string;
   localizacao?: string;
+  precoMin?: number;
+  precoMax?: number;
   ordenacao?: Ordenacao;
   usuarioId?: Item["usuario_id"];
   query?: string;

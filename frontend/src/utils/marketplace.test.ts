@@ -11,6 +11,7 @@ test("buildAdPayload omits empty image and converts donations to free", () => {
     categorias: ["Materiais"],
     preco: "12",
     tipo_negociacao: "doacao",
+    condicao: "usado",
     localizacao: "",
     imagem_url: "   ",
     contato: "  fulano@email.com  ",
@@ -20,6 +21,7 @@ test("buildAdPayload omits empty image and converts donations to free", () => {
   assert.equal(payload.preco, 0);
   assert.equal(payload.titulo, "Livro de Cálculo");
   assert.equal(payload.localizacao, "Campus");
+  assert.equal(payload.condicao, "usado");
   assert.equal(payload.contato, "fulano@email.com");
   assert.deepEqual(payload.categorias, ["Materiais"]);
   assert.equal("imagem_url" in payload, false);
