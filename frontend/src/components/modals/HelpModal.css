@@ -7,6 +7,9 @@
   display: grid;
   gap: 10px;
   justify-items: center;
+  align-content: center;
+  min-height: 100%;
+  margin: auto;
 }
 
 .help-modal-tape {
@@ -26,10 +29,14 @@
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-.help-modal-emoji {
-  font-size: 56px;
-  line-height: 1;
+.help-modal-image {
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 640 / 456;
+  object-fit: cover;
+  border-radius: 10px;
   margin: 10px 0;
+  box-shadow: 5px 5px 0 var(--lime);
 }
 
 .help-modal h2 {

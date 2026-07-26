@@ -14,9 +14,11 @@ export function HelpModal({ onClose }: HelpModalProps) {
         </button>
         <div className="help-modal-body">
           <p className="help-modal-tape">🚧 EM CONSTRUÇÃO 🚧</p>
-          <div className="help-modal-emoji" aria-hidden="true">
-            👷‍♂️👷‍♀️
-          </div>
+          <img
+            className="help-modal-image"
+            src="/images/homens-trabalhando.jpg"
+            alt="Ilustração de um funcionário exausto trabalhando no computador"
+          />
           <p className="eyebrow">CENTRAL DE AJUDA</p>
           <h2>
             Seção <em>indisponível</em>...
