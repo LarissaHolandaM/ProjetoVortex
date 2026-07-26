@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { fetchFavoritos } from "../../api/client";
-import type { Item, StudentTab, Usuario } from "../../types";
+import { fetchFavoritos, fetchMeusAnuncios } from "../../api/client";
+import type { Item, ProfileFormState, StudentTab, Usuario } from "../../types";
 import { ItemCard } from "../marketplace/ItemCard";
+import { ProfileTab } from "./ProfileTab";
 import "./StudentArea.css";
 
 interface StudentAreaProps {
   user: Usuario | null;
-  items: Item[];
   onBack: () => void;
   onOpenPublish: () => void;
   onViewItem: (item: Item) => void;
@@ -14,11 +14,12 @@ interface StudentAreaProps {
   isFavorite: (item: Item) => boolean;
   onEdit: (item: Item) => void;
   onDelete: (item: Item) => void;
+  refreshKey: number;
+  onUpdateProfile: (dados: Partial<ProfileFormState>) => Promise<void>;
 }
 
 export function StudentArea({
   user,
-  items,
   onBack,
   onOpenPublish,
   onViewItem,
@@ -26,12 +27,23 @@ export function StudentArea({
   isFavorite,
   onEdit,
   onDelete,
+  refreshKey,
+  onUpdateProfile,
 }: StudentAreaProps) {
   const [tab, setTab] = useState<StudentTab>("meus");
+  const [meusAnuncios, setMeusAnuncios] = useState<Item[]>([]);
+  const [loadingMeus, setLoadingMeus] = useState(false);
   const [favoritos, setFavoritos] = useState<Item[]>([]);
   const [loadingFavoritos, setLoadingFavoritos] = useState(false);
 
-  const myItems = items.filter((item) => item.usuario_id === user?.id);
+  useEffect(() => {
+    if (tab !== "meus") return;
+    setLoadingMeus(true);
+    fetchMeusAnuncios()
+      .then(setMeusAnuncios)
+      .catch(() => setMeusAnuncios([]))
+      .finally(() => setLoadingMeus(false));
+  }, [tab, refreshKey]);
 
   useEffect(() => {
     if (tab !== "favoritos") return;
@@ -47,7 +59,20 @@ export function StudentArea({
     setFavoritos((prev) => prev.filter((favorito) => favorito.id !== item.id));
   }
 
-  const list = tab === "meus" ? myItems : favoritos;
+  async function handleDelete(item: Item) {
+    await onDelete(item);
+    fetchMeusAnuncios()
+      .then(setMeusAnuncios)
+      .catch(() => {});
+  }
+
+  const list = tab === "meus" ? meusAnuncios : favoritos;
+
+  const titulos: Record<StudentTab, string> = {
+    meus: "Meus anúncios",
+    favoritos: "Meus favoritos",
+    perfil: "Meu perfil",
+  };
 
   return (
     <div className="overlay-page">
@@ -56,10 +81,12 @@ export function StudentArea({
           ← Voltar
         </button>
         <p className="eyebrow">ÁREA DO ESTUDANTE</p>
-        <h2>{tab === "meus" ? "Meus anúncios" : "Meus favoritos"}</h2>
-        <button className="button button-small" onClick={onOpenPublish}>
-          + Novo anúncio
-        </button>
+        <h2>{titulos[tab]}</h2>
+        {tab !== "perfil" && (
+          <button className="button button-small" onClick={onOpenPublish}>
+            + Novo anúncio
+          </button>
+        )}
       </div>
 
       <div className="student-tabs">
@@ -72,28 +99,40 @@ export function StudentArea({
         >
           Favoritos
         </button>
+        <button className={tab === "perfil" ? "student-tab active" : "student-tab"} onClick={() => setTab("perfil")}>
+          Perfil
+        </button>
       </div>
 
-      <div className="item-grid mine-grid">
-        {list.map((item) => (
-          <ItemCard
-            item={item}
-            key={item.id}
-            onView={onViewItem}
-            onToggleFavorite={tab === "favoritos" ? handleUnfavorite : onToggleFavorite}
-            isFavorite={tab === "favoritos" ? true : isFavorite(item)}
-            showOwnerActions={tab === "meus"}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        ))}
-      </div>
+      {tab === "perfil" ? (
+        <ProfileTab user={user} onUpdateProfile={onUpdateProfile} />
+      ) : (
+        <>
+          <div className="item-grid mine-grid">
+            {list.map((item) => (
+              <ItemCard
+                item={item}
+                key={item.id}
+                onView={onViewItem}
+                onToggleFavorite={tab === "favoritos" ? handleUnfavorite : onToggleFavorite}
+                isFavorite={tab === "favoritos" ? true : isFavorite(item)}
+                showOwnerActions={tab === "meus"}
+                onEdit={onEdit}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
 
-      {tab === "meus" && !myItems.length && <div className="empty-state">Você ainda não publicou nenhum item.</div>}
-      {tab === "favoritos" && !loadingFavoritos && !favoritos.length && (
-        <div className="empty-state">Você ainda não favoritou nenhum item.</div>
+          {tab === "meus" && !loadingMeus && !meusAnuncios.length && (
+            <div className="empty-state">Você ainda não publicou nenhum item.</div>
+          )}
+          {tab === "meus" && loadingMeus && <div className="empty-state">Carregando seus anúncios…</div>}
+          {tab === "favoritos" && !loadingFavoritos && !favoritos.length && (
+            <div className="empty-state">Você ainda não favoritou nenhum item.</div>
+          )}
+          {tab === "favoritos" && loadingFavoritos && <div className="empty-state">Carregando favoritos…</div>}
+        </>
       )}
-      {tab === "favoritos" && loadingFavoritos && <div className="empty-state">Carregando favoritos…</div>}
     </div>
   );
 }
