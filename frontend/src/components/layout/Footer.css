@@ -31,14 +31,25 @@ footer .footer-main p {
   margin-bottom: 2px;
 }
 
-.footer-help a {
+.footer-help a,
+.footer-help-link {
   color: #a9c4ca;
   text-decoration: none;
 }
 
-.footer-help a:hover {
+.footer-help a:hover,
+.footer-help-link:hover {
   color: var(--lime);
   text-decoration: underline;
+}
+
+.footer-help-link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .footer-copy {

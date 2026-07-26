@@ -1,6 +1,10 @@
 import "./Footer.css";
 
-export function Footer() {
+interface FooterProps {
+  onOpenHelp: () => void;
+}
+
+export function Footer({ onOpenHelp }: FooterProps) {
   return (
     <footer>
       <div className="footer-main">
@@ -19,7 +23,9 @@ export function Footer() {
         <a href="https://wa.me/5585999999999" target="_blank" rel="noreferrer">
           WhatsApp: (85) 99999-9999
         </a>
-        <a href="#how-it-works">Central de ajuda / Como funciona</a>
+        <button type="button" className="footer-help-link" onClick={onOpenHelp}>
+          Central de ajuda
+        </button>
       </div>
 
       <span className="footer-copy">© 2026 Vortex Marketplace</span>
