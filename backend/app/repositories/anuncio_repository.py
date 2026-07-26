@@ -22,7 +22,7 @@ class AnuncioRepository:
     def list(
         self,
         titulo: str | None = None,
-        categoria: str | None = None,
+        categoria: list[str] | None = None,
         tipo_negociacao: str | None = None,
         condicao: str | None = None,
         localizacao: str | None = None,
@@ -40,13 +40,13 @@ class AnuncioRepository:
         query = base_query
         if titulo:
             query = query.filter(Anuncio.titulo.ilike(f"%{titulo}%"))
-        if categoria and categoria.lower() != "todos":
-            query = query.filter(
-                or_(
-                    Anuncio.categoria.ilike(f"%{categoria}%"),
-                    Anuncio.categorias_raw.ilike(f"%{categoria}%"),
-                )
-            )
+        categorias_filtro = [c for c in (categoria or []) if c and c.lower() != "todos"]
+        if categorias_filtro:
+            condicoes_categoria = []
+            for cat in categorias_filtro:
+                condicoes_categoria.append(Anuncio.categoria.ilike(f"%{cat}%"))
+                condicoes_categoria.append(Anuncio.categorias_raw.ilike(f"%{cat}%"))
+            query = query.filter(or_(*condicoes_categoria))
         if usuario_id is not None:
             query = query.filter(Anuncio.usuario_id == usuario_id)
         if tipo_negociacao:

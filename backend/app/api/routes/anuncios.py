@@ -26,7 +26,7 @@ def create_anuncio(
 @router.get("/", response_model=PaginatedResponse[AnuncioResponse])
 def list_anuncios(
     titulo: str | None = Query(default=None),
-    categoria: str | None = Query(default=None),
+    categoria: list[str] | None = Query(default=None),
     tipo_negociacao: str | None = Query(default=None),
     condicao: str | None = Query(default=None),
     localizacao: str | None = Query(default=None),

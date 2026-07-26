@@ -38,7 +38,7 @@ class AnuncioService:
     def list(
         self,
         titulo: str | None = None,
-        categoria: str | None = None,
+        categoria: list[str] | None = None,
         tipo_negociacao: str | None = None,
         condicao: str | None = None,
         localizacao: str | None = None,
