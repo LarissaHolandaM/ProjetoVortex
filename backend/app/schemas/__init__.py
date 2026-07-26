@@ -2,7 +2,7 @@ from app.schemas.anuncio import AnuncioCreate, AnuncioResponse, AnuncioUpdate
 from app.schemas.auth import LoginRequest, TokenResponse
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.response import MessageResponse
-from app.schemas.usuario import UsuarioCreate, UsuarioResponse
+from app.schemas.usuario import UsuarioCreate, UsuarioResponse, UsuarioUpdate
 
 __all__ = [
     "AnuncioCreate",
@@ -14,4 +14,5 @@ __all__ = [
     "MessageResponse",
     "UsuarioCreate",
     "UsuarioResponse",
+    "UsuarioUpdate",
 ]

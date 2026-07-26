@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import anuncios, auth, favoritos, uploads
 from app.core.config import get_port, settings
 from app.core.database import Base, engine
+from app.core.migrations import run_lightweight_migrations
 from app.middleware.exception_handler import register_exception_handlers
 
 
@@ -46,3 +47,4 @@ def health_check():
 
 
 Base.metadata.create_all(bind=engine)
+run_lightweight_migrations(engine)

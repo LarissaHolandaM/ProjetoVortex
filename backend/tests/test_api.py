@@ -154,7 +154,7 @@ def test_create_anuncio_with_marketplace_fields():
             "titulo": "Livro de Algoritmos",
             "descricao": "Livro usado, com marcações leves",
             "preco": 0,
-            "categoria": "Livros",
+            "categorias": ["Tecnologia", "Materiais"],
             "tipo_negociacao": "doacao",
             "condicao": "bom_estado",
             "localizacao": "Bloco B",
@@ -166,12 +166,94 @@ def test_create_anuncio_with_marketplace_fields():
 
     assert response.status_code == 201
     body = response.json()
-    assert body["categoria"] == "Livros"
+    assert body["categoria"] == "Tecnologia"
+    assert body["categorias"] == ["Tecnologia", "Materiais"]
     assert body["tipo_negociacao"] == "doacao"
     assert body["condicao"] == "bom_estado"
     assert body["localizacao"] == "Bloco B"
     assert body["imagem_url"] == "https://example.com/livro.jpg"
     assert body["contato"] == "elisa@email.com"
+
+
+def test_criar_anuncio_com_categoria_invalida_retorna_422():
+    register_response = client.post(
+        "/auth/register",
+        json={"nome": "Lia", "email": "lia@email.com", "senha": "123456"},
+    )
+    headers = {"Authorization": f"Bearer {register_response.json()['access_token']}"}
+
+    response = client.post(
+        "/anuncios/",
+        json={
+            "titulo": "Item qualquer",
+            "descricao": "Descrição válida",
+            "preco": 10,
+            "categorias": ["Categoria Fantasia"],
+            "contato": "lia@email.com",
+        },
+        headers=headers,
+    )
+
+    assert response.status_code == 422
+
+
+def test_filtrar_anuncios_por_categoria_e_por_vendedor():
+    register_response = client.post(
+        "/auth/register",
+        json={"nome": "Marina", "email": "marina@email.com", "senha": "123456"},
+    )
+    token = register_response.json()["access_token"]
+    usuario_id = register_response.json()["usuario"]["id"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    client.post(
+        "/anuncios/",
+        json={
+            "titulo": "Estetoscópio",
+            "descricao": "Usado em bom estado",
+            "preco": 150,
+            "categorias": ["Saúde"],
+            "contato": "marina@email.com",
+        },
+        headers=headers,
+    )
+    client.post(
+        "/anuncios/",
+        json={
+            "titulo": "Cadeira",
+            "descricao": "Item de casa",
+            "preco": 80,
+            "categorias": ["Casa"],
+            "contato": "marina@email.com",
+        },
+        headers=headers,
+    )
+
+    por_categoria = client.get("/anuncios/?categoria=Saúde")
+    assert por_categoria.status_code == 200
+    assert por_categoria.json()["total"] == 1
+    assert por_categoria.json()["items"][0]["titulo"] == "Estetoscópio"
+
+    por_vendedor = client.get(f"/anuncios/?usuario_id={usuario_id}")
+    assert por_vendedor.status_code == 200
+    assert por_vendedor.json()["total"] == 2
+
+
+def test_atualizar_perfil_do_usuario():
+    register_response = client.post(
+        "/auth/register",
+        json={"nome": "Nina", "email": "nina@email.com", "senha": "123456"},
+    )
+    headers = {"Authorization": f"Bearer {register_response.json()['access_token']}"}
+
+    response = client.put(
+        "/auth/me",
+        json={"nome": "Nina Souza"},
+        headers=headers,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["nome"] == "Nina Souza"
 
 
 def test_list_my_anuncios():
@@ -193,7 +275,7 @@ def test_list_my_anuncios():
             "titulo": "Calculadora Científica",
             "descricao": "Boa para engenharia",
             "preco": 120,
-            "categoria": "Engenharia",
+            "categorias": ["Tecnologia"],
             "tipo_negociacao": "venda",
             "condicao": "usado",
             "localizacao": "Bloco C",

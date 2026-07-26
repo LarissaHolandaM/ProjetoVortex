@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.models.anuncio import Anuncio
@@ -27,6 +28,7 @@ class AnuncioRepository:
         localizacao: str | None = None,
         preco_min: float | None = None,
         preco_max: float | None = None,
+        usuario_id: int | None = None,
         order_by: str = "created_at",
         order_desc: bool = True,
         skip: int = 0,
@@ -38,8 +40,15 @@ class AnuncioRepository:
         query = base_query
         if titulo:
             query = query.filter(Anuncio.titulo.ilike(f"%{titulo}%"))
-        if categoria:
-            query = query.filter(Anuncio.categoria.ilike(f"%{categoria}%"))
+        if categoria and categoria.lower() != "todos":
+            query = query.filter(
+                or_(
+                    Anuncio.categoria.ilike(f"%{categoria}%"),
+                    Anuncio.categorias_raw.ilike(f"%{categoria}%"),
+                )
+            )
+        if usuario_id is not None:
+            query = query.filter(Anuncio.usuario_id == usuario_id)
         if tipo_negociacao:
             query = query.filter(Anuncio.tipo_negociacao.ilike(f"%{tipo_negociacao}%"))
         if condicao:

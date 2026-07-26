@@ -25,7 +25,6 @@ class AnuncioService:
             titulo=anuncio_data.titulo,
             descricao=anuncio_data.descricao,
             preco=anuncio_data.preco,
-            categoria=anuncio_data.categoria,
             tipo_negociacao=anuncio_data.tipo_negociacao,
             condicao=anuncio_data.condicao,
             localizacao=anuncio_data.localizacao,
@@ -33,6 +32,7 @@ class AnuncioService:
             contato=anuncio_data.contato,
             usuario_id=usuario_id,
         )
+        anuncio.categorias = anuncio_data.categorias
         return self.repository.create(anuncio)
 
     def list(
@@ -44,6 +44,7 @@ class AnuncioService:
         localizacao: str | None = None,
         preco_min: float | None = None,
         preco_max: float | None = None,
+        usuario_id: int | None = None,
         order_by: str = "created_at",
         order_desc: bool = True,
         skip: int = 0,
@@ -67,6 +68,7 @@ class AnuncioService:
             localizacao=localizacao,
             preco_min=preco_min,
             preco_max=preco_max,
+            usuario_id=usuario_id,
             order_by=order_by,
             order_desc=order_desc,
             skip=skip,
@@ -97,8 +99,8 @@ class AnuncioService:
             anuncio.descricao = anuncio_data.descricao
         if anuncio_data.preco is not None:
             anuncio.preco = anuncio_data.preco
-        if anuncio_data.categoria is not None:
-            anuncio.categoria = anuncio_data.categoria
+        if anuncio_data.categorias is not None:
+            anuncio.categorias = anuncio_data.categorias
         if anuncio_data.tipo_negociacao is not None:
             anuncio.tipo_negociacao = anuncio_data.tipo_negociacao
         if anuncio_data.condicao is not None:
