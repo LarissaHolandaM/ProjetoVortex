@@ -1,5 +1,5 @@
 import type { Item } from "../../types";
-import { formatPrice, getItemCategorias, getItemImage } from "../../utils/marketplace";
+import { formatPrice, getItemCategorias, getItemImage, truncateDescricao } from "../../utils/marketplace";
 import "./ItemCard.css";
 
 interface ItemCardProps {
@@ -42,7 +42,7 @@ export function ItemCard({
           {getItemCategorias(item).join(" · ")} · {item.localizacao || "Campus"}
         </p>
         <h3>{item.titulo}</h3>
-        <p className="item-description">{item.descricao}</p>
+        <p className="item-description">{truncateDescricao(item.descricao)}</p>
         <div className="item-footer">
           <strong>{formatPrice(item)}</strong>
           <button onClick={() => onView(item)}>Ver item ↗</button>

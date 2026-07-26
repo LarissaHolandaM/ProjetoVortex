@@ -104,8 +104,11 @@
   font-weight: 500;
 }
 
-.categoria-pill.active,
 .categoria-pill:hover {
+  border-color: var(--green);
+}
+
+.categoria-pill.active {
   border-color: var(--green);
   background: var(--green);
   color: white;

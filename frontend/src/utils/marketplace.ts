@@ -50,3 +50,11 @@ export function formatPrice(item: Pick<Item, "preco" | "tipo_negociacao">): stri
   if (item.tipo_negociacao === "doacao" || Number(item.preco) === 0) return "Grátis";
   return `R$ ${Number(item.preco).toFixed(2).replace(".", ",")}`;
 }
+
+const DESCRICAO_LIMITE = 200;
+
+export function truncateDescricao(descricao: string, limite: number = DESCRICAO_LIMITE): string {
+  const texto = descricao?.trim() ?? "";
+  if (texto.length <= limite) return texto;
+  return `${texto.slice(0, limite).trimEnd()}...`;
+}
