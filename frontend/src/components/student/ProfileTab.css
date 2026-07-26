@@ -74,6 +74,21 @@
   color: #c1364a;
 }
 
+.profile-logout {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.profile-logout .text-button.danger {
+  color: #c1364a;
+  font-weight: 600;
+}
+
+.profile-logout .text-button.danger:hover {
+  color: #8f1f31;
+}
+
 @media (max-width: 500px) {
   .profile-form .form-row {
     grid-template-columns: 1fr;

@@ -5,9 +5,10 @@ import "./ProfileTab.css";
 interface ProfileTabProps {
   user: Usuario | null;
   onUpdateProfile: (dados: Partial<ProfileFormState>) => Promise<void>;
+  onLogout: () => void;
 }
 
-export function ProfileTab({ user, onUpdateProfile }: ProfileTabProps) {
+export function ProfileTab({ user, onUpdateProfile, onLogout }: ProfileTabProps) {
   const [nome, setNome] = useState(user?.nome || "");
   const [email, setEmail] = useState(user?.email || "");
   const [senhaAtual, setSenhaAtual] = useState("");
@@ -89,6 +90,12 @@ export function ProfileTab({ user, onUpdateProfile }: ProfileTabProps) {
           {saving ? "Salvando…" : "Salvar alterações"}
         </button>
       </form>
+
+      <div className="profile-logout">
+        <button type="button" className="text-button danger" onClick={onLogout}>
+          Sair da conta ↗
+        </button>
+      </div>
     </div>
   );
 }

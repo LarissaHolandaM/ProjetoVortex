@@ -16,6 +16,7 @@ interface StudentAreaProps {
   onDelete: (item: Item) => void;
   refreshKey: number;
   onUpdateProfile: (dados: Partial<ProfileFormState>) => Promise<void>;
+  onLogout: () => void;
 }
 
 export function StudentArea({
@@ -29,6 +30,7 @@ export function StudentArea({
   onDelete,
   refreshKey,
   onUpdateProfile,
+  onLogout,
 }: StudentAreaProps) {
   const [tab, setTab] = useState<StudentTab>("meus");
   const [meusAnuncios, setMeusAnuncios] = useState<Item[]>([]);
@@ -105,7 +107,7 @@ export function StudentArea({
       </div>
 
       {tab === "perfil" ? (
-        <ProfileTab user={user} onUpdateProfile={onUpdateProfile} />
+        <ProfileTab user={user} onUpdateProfile={onUpdateProfile} onLogout={onLogout} />
       ) : (
         <>
           <div className="item-grid mine-grid">
