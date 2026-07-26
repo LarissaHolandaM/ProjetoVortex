@@ -1,10 +1,15 @@
 import "./StatStrip.css";
 
-export function StatStrip() {
+interface StatStripProps {
+  totalItens: number;
+  totalCategorias: number;
+}
+
+export function StatStrip({ totalItens, totalCategorias }: StatStripProps) {
   return (
     <section className="stat-strip">
       <div>
-        <strong>+2.4k</strong>
+        <strong>{totalItens}</strong>
         <span>itens circulando</span>
       </div>
       <div>
@@ -12,7 +17,7 @@ export function StatStrip() {
         <span>encontram um novo lar</span>
       </div>
       <div>
-        <strong>12</strong>
+        <strong>{totalCategorias}</strong>
         <span>categorias para explorar</span>
       </div>
       <p>

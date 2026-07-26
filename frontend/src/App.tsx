@@ -15,15 +15,14 @@ import { useAuth } from "./hooks/useAuth";
 import { useFavorites } from "./hooks/useFavorites";
 import { useItems } from "./hooks/useItems";
 import { useNotice } from "./hooks/useNotice";
-import type { AdFormState, AuthMode, Item, ModalType, ViewType } from "./types";
+import { CATEGORIAS } from "./types";
+import type { AdFormState, AuthMode, Item, ModalType, ProfileFormState, ViewType } from "./types";
 import "./App.css";
-
-const categories = ["Todos", "Livros", "Engenharia", "Computação", "Casa"];
 
 const emptyForm: AdFormState = {
   titulo: "",
   descricao: "",
-  categoria: "Livros",
+  categorias: [],
   preco: "",
   tipo_negociacao: "venda",
   localizacao: "",
@@ -35,7 +34,7 @@ function itemToForm(item: Item): AdFormState {
   return {
     titulo: item.titulo,
     descricao: item.descricao,
-    categoria: item.categoria,
+    categorias: item.categorias?.length ? item.categorias : [item.categoria],
     preco: String(item.preco),
     tipo_negociacao: item.tipo_negociacao,
     localizacao: item.localizacao || "",
@@ -49,8 +48,28 @@ function errorMessage(error: unknown, fallback: string): string {
 }
 
 function App() {
-  const { user, loginUser, registerUser } = useAuth();
-  const { items, filtered, category, setCategory, query, setQuery, publish, edit, remove } = useItems();
+  const { user, loginUser, registerUser, updateUser } = useAuth();
+  const {
+    filtered,
+    total,
+    category,
+    setCategory,
+    query,
+    setQuery,
+    tipoNegociacao,
+    setTipoNegociacao,
+    localizacao,
+    setLocalizacao,
+    ordenacao,
+    setOrdenacao,
+    sellerName,
+    viewSellerItems,
+    clearSellerFilter,
+    clearFilters,
+    publish,
+    edit,
+    remove,
+  } = useItems();
   const { isFavorite, toggleFavorite } = useFavorites(user);
   const { notice, setNotice } = useNotice();
 
@@ -59,6 +78,7 @@ function App() {
   const [form, setForm] = useState<AdFormState>(emptyForm);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [meusRefreshKey, setMeusRefreshKey] = useState(0);
 
   const goHome = () => setView("home");
   const openProfile = () => (user ? setView("mine") : setModal("auth"));
@@ -76,6 +96,15 @@ function App() {
   const updateForm = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm({ ...form, [event.target.name]: event.target.value });
 
+  function toggleCategoriaForm(categoria: string) {
+    setForm((prev) => ({
+      ...prev,
+      categorias: prev.categorias.includes(categoria)
+        ? prev.categorias.filter((item) => item !== categoria)
+        : [...prev.categorias, categoria],
+    }));
+  }
+
   async function submitAuth(mode: AuthMode, nome: string, email: string, senha: string) {
     try {
       const nextUser = mode === "login" ? await loginUser(email, senha) : await registerUser(nome, email, senha);
@@ -89,6 +118,10 @@ function App() {
   async function submitAd(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!user) return;
+    if (!form.categorias.length) {
+      setNotice("Selecione ao menos uma categoria.");
+      return;
+    }
     try {
       if (editingItem) {
         await edit(editingItem.id, form);
@@ -100,6 +133,7 @@ function App() {
       setForm(emptyForm);
       setEditingItem(null);
       setModal(null);
+      setMeusRefreshKey((prev) => prev + 1);
     } catch (error) {
       setNotice(errorMessage(error, "Não foi possível salvar o anúncio."));
     }
@@ -123,6 +157,7 @@ function App() {
       await remove(item.id);
       setSelectedItem(null);
       setNotice("Anúncio removido com sucesso.");
+      setMeusRefreshKey((prev) => prev + 1);
     } catch (error) {
       setNotice(errorMessage(error, "Não foi possível remover o anúncio."));
     }
@@ -140,6 +175,17 @@ function App() {
     }
   }
 
+  function handleViewSellerItems(item: Item) {
+    setSelectedItem(null);
+    setView("home");
+    viewSellerItems(item);
+    setTimeout(() => scrollToId("marketplace"), 50);
+  }
+
+  async function handleUpdateProfile(dados: Partial<ProfileFormState>) {
+    await updateUser(dados);
+  }
+
   return (
     <div className="app-shell">
       <Header
@@ -152,13 +198,21 @@ function App() {
 
       <main>
         <HeroSection onExplore={() => scrollToId("marketplace")} onPublish={openPublish} />
-        <StatStrip />
+        <StatStrip totalItens={total} totalCategorias={CATEGORIAS.length} />
         <MarketplaceSection
-          categories={categories}
           category={category}
           onCategoryChange={setCategory}
           query={query}
           onQueryChange={setQuery}
+          tipoNegociacao={tipoNegociacao}
+          onTipoNegociacaoChange={setTipoNegociacao}
+          localizacao={localizacao}
+          onLocalizacaoChange={setLocalizacao}
+          ordenacao={ordenacao}
+          onOrdenacaoChange={setOrdenacao}
+          sellerName={sellerName}
+          onClearSellerFilter={clearSellerFilter}
+          onClearFilters={clearFilters}
           items={filtered}
           onViewItem={handleViewItem}
           onToggleFavorite={handleToggleFavorite}
@@ -173,7 +227,6 @@ function App() {
       {view === "mine" && (
         <StudentArea
           user={user}
-          items={items}
           onBack={goHome}
           onOpenPublish={openPublish}
           onViewItem={handleViewItem}
@@ -181,16 +234,18 @@ function App() {
           isFavorite={isFavorite}
           onEdit={handleEditItem}
           onDelete={handleDeleteItem}
+          refreshKey={meusRefreshKey}
+          onUpdateProfile={handleUpdateProfile}
         />
       )}
 
       {modal === "auth" && <AuthModal onClose={() => setModal(null)} onSubmit={submitAuth} />}
       {modal === "publish" && (
         <PublishModal
-          categories={categories.slice(1)}
           form={form}
           isEditing={Boolean(editingItem)}
           onChange={updateForm}
+          onToggleCategoria={toggleCategoriaForm}
           onClose={() => {
             setModal(null);
             setEditingItem(null);
@@ -208,6 +263,7 @@ function App() {
           onToggleFavorite={handleToggleFavorite}
           onEdit={handleEditItem}
           onDelete={handleDeleteItem}
+          onViewSellerItems={handleViewSellerItems}
         />
       )}
 
