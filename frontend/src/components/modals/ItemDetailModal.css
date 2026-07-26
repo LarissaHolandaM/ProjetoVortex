@@ -66,6 +66,16 @@
   color: var(--green);
 }
 
+.item-detail-seller {
+  font-size: 13px;
+  color: #506876;
+  margin-bottom: 22px;
+}
+
+.item-detail-seller .link-button {
+  font-size: 13px;
+}
+
 .item-detail-actions {
   display: flex;
   flex-wrap: wrap;

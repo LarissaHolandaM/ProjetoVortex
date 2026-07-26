@@ -1,5 +1,5 @@
 import type { Item } from "../../types";
-import { formatPrice, getItemImage } from "../../utils/marketplace";
+import { formatPrice, getItemCategorias, getItemImage } from "../../utils/marketplace";
 import "./ItemCard.css";
 
 interface ItemCardProps {
@@ -39,7 +39,7 @@ export function ItemCard({
       </div>
       <div className="item-content">
         <p className="item-category">
-          {item.categoria} · {item.localizacao || "Campus"}
+          {getItemCategorias(item).join(" · ")} · {item.localizacao || "Campus"}
         </p>
         <h3>{item.titulo}</h3>
         <p className="item-description">{item.descricao}</p>

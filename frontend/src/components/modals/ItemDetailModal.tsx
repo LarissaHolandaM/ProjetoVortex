@@ -1,5 +1,5 @@
 import type { Item } from "../../types";
-import { formatPrice, getCondicaoLabel, getItemImage } from "../../utils/marketplace";
+import { formatPrice, getCondicaoLabel, getItemCategorias, getItemImage } from "../../utils/marketplace";
 import "./Modal.css";
 import "./ItemDetailModal.css";
 
@@ -11,6 +11,7 @@ interface ItemDetailModalProps {
   onToggleFavorite: (item: Item) => void;
   onEdit: (item: Item) => void;
   onDelete: (item: Item) => void;
+  onViewSellerItems: (item: Item) => void;
 }
 
 export function ItemDetailModal({
@@ -21,6 +22,7 @@ export function ItemDetailModal({
   onToggleFavorite,
   onEdit,
   onDelete,
+  onViewSellerItems,
 }: ItemDetailModalProps) {
   return (
     <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -35,7 +37,7 @@ export function ItemDetailModal({
           </span>
         </div>
         <p className="eyebrow">
-          {item.categoria} · {item.localizacao || "Campus"}
+          {getItemCategorias(item).join(" · ")} · {item.localizacao || "Campus"}
         </p>
         <h2>{item.titulo}</h2>
         <p className="item-detail-price">{formatPrice(item)}</p>
@@ -48,6 +50,14 @@ export function ItemDetailModal({
         <div className="item-detail-contact">
           <strong>Contato:</strong> {item.contato}
         </div>
+        {item.usuario_nome && !isOwner && (
+          <p className="item-detail-seller">
+            Anunciado por <strong>{item.usuario_nome}</strong> ·{" "}
+            <button className="link-button" onClick={() => onViewSellerItems(item)}>
+              ver todos os anúncios deste vendedor
+            </button>
+          </p>
+        )}
         <div className="item-detail-actions">
           <button className="button" onClick={() => onToggleFavorite(item)}>
             {isFavorite ? "♥ Remover dos favoritos" : "♡ Favoritar"}

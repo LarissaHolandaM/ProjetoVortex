@@ -65,6 +65,30 @@
   gap: 14px;
 }
 
+.categoria-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.categoria-pill {
+  border: 1px solid var(--line);
+  background: white;
+  padding: 8px 14px;
+  color: var(--ink);
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 500;
+}
+
+.categoria-pill.active,
+.categoria-pill:hover {
+  border-color: var(--green);
+  background: var(--green);
+  color: white;
+}
+
 .modal small {
   display: block;
   color: #668084;

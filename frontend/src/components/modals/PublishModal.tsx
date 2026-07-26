@@ -1,17 +1,25 @@
 import type { ChangeEvent, FormEvent } from "react";
+import { CATEGORIAS } from "../../types";
 import type { AdFormState } from "../../types";
 import "./Modal.css";
 
 interface PublishModalProps {
-  categories: string[];
   form: AdFormState;
   isEditing: boolean;
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+  onToggleCategoria: (categoria: string) => void;
   onClose: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export function PublishModal({ categories, form, isEditing, onChange, onClose, onSubmit }: PublishModalProps) {
+export function PublishModal({
+  form,
+  isEditing,
+  onChange,
+  onToggleCategoria,
+  onClose,
+  onSubmit,
+}: PublishModalProps) {
   return (
     <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <div className="modal">
@@ -53,15 +61,22 @@ export function PublishModal({ categories, form, isEditing, onChange, onClose, o
               required
             />
           </label>
+          <label>
+            Categorias
+            <span className="categoria-picker">
+              {CATEGORIAS.map((categoria) => (
+                <button
+                  type="button"
+                  key={categoria}
+                  className={form.categorias.includes(categoria) ? "categoria-pill active" : "categoria-pill"}
+                  onClick={() => onToggleCategoria(categoria)}
+                >
+                  {categoria}
+                </button>
+              ))}
+            </span>
+          </label>
           <div className="form-row">
-            <label>
-              Categoria
-              <select name="categoria" value={form.categoria} onChange={onChange}>
-                {categories.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
             <label>
               Negociação
               <select name="tipo_negociacao" value={form.tipo_negociacao} onChange={onChange}>
@@ -69,8 +84,6 @@ export function PublishModal({ categories, form, isEditing, onChange, onClose, o
                 <option value="doacao">Doação</option>
               </select>
             </label>
-          </div>
-          <div className="form-row">
             <label>
               Preço (R$)
               <input
@@ -83,17 +96,17 @@ export function PublishModal({ categories, form, isEditing, onChange, onClose, o
                 placeholder="0,00"
               />
             </label>
-            <label>
-              Localização
-              <input
-                name="localizacao"
-                value={form.localizacao}
-                onChange={onChange}
-                placeholder="Ex.: Bloco B"
-                required
-              />
-            </label>
           </div>
+          <label>
+            Localização
+            <input
+              name="localizacao"
+              value={form.localizacao}
+              onChange={onChange}
+              placeholder="Ex.: Bloco B"
+              required
+            />
+          </label>
           <label>
             URL da imagem
             <input
