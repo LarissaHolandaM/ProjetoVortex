@@ -8,7 +8,7 @@ test("buildAdPayload omits empty image and converts donations to free", () => {
   const form: AdFormState = {
     titulo: "Livro de Cálculo",
     descricao: "Excelente estado",
-    categoria: "Livros",
+    categorias: ["Materiais"],
     preco: "12",
     tipo_negociacao: "doacao",
     localizacao: "",
@@ -21,6 +21,7 @@ test("buildAdPayload omits empty image and converts donations to free", () => {
   assert.equal(payload.titulo, "Livro de Cálculo");
   assert.equal(payload.localizacao, "Campus");
   assert.equal(payload.contato, "fulano@email.com");
+  assert.deepEqual(payload.categorias, ["Materiais"]);
   assert.equal("imagem_url" in payload, false);
 });
 

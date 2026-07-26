@@ -2,12 +2,28 @@ export type TipoNegociacao = "venda" | "doacao";
 
 export type Condicao = "novo" | "usado" | "bom_estado" | "defeito";
 
+export const CATEGORIAS = [
+  "Saúde",
+  "Tecnologia",
+  "Direito",
+  "Gestão",
+  "Casa",
+  "Eletrônicos",
+  "Materiais",
+  "Outros",
+] as const;
+
+export type Categoria = (typeof CATEGORIAS)[number];
+
+export type Ordenacao = "recentes" | "menor_preco" | "maior_preco";
+
 export interface Item {
   id: number | string;
   titulo: string;
   descricao: string;
   preco: number;
   categoria: string;
+  categorias?: string[];
   tipo_negociacao: TipoNegociacao;
   condicao?: Condicao;
   localizacao?: string;
@@ -15,6 +31,7 @@ export interface Item {
   imagem_nome?: string;
   contato: string;
   usuario_id: number | string;
+  usuario_nome?: string;
 }
 
 export interface Usuario {
@@ -26,12 +43,19 @@ export interface Usuario {
 export interface AdFormState {
   titulo: string;
   descricao: string;
-  categoria: string;
+  categorias: string[];
   preco: string;
   tipo_negociacao: TipoNegociacao;
   localizacao: string;
   imagem_url: string;
   contato: string;
+}
+
+export interface ProfileFormState {
+  nome: string;
+  email: string;
+  senha_atual: string;
+  nova_senha: string;
 }
 
 export type ModalType = "auth" | "publish" | null;
@@ -40,7 +64,16 @@ export type ViewType = "home" | "mine";
 
 export type AuthMode = "login" | "register";
 
-export type StudentTab = "meus" | "favoritos";
+export type StudentTab = "meus" | "favoritos" | "perfil";
+
+export interface AnuncioFiltros {
+  categoria?: string;
+  tipoNegociacao?: string;
+  localizacao?: string;
+  ordenacao?: Ordenacao;
+  usuarioId?: Item["usuario_id"];
+  query?: string;
+}
 
 export interface PaginatedResponse<T> {
   items: T[];

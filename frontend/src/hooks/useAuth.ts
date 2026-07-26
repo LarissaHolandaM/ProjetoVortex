@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AUTH_TOKEN_KEY, AUTH_USER_KEY, login, register } from "../api/client";
-import type { Usuario } from "../types";
+import { AUTH_TOKEN_KEY, AUTH_USER_KEY, login, register, updateProfile } from "../api/client";
+import type { ProfileFormState, Usuario } from "../types";
 
 function readStoredUser(): Usuario | null {
   try {
@@ -37,5 +37,12 @@ export function useAuth() {
     setUser(null);
   }
 
-  return { user, loginUser, registerUser, logout };
+  async function updateUser(dados: Partial<ProfileFormState>): Promise<Usuario> {
+    const nextUser = await updateProfile(dados);
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(nextUser));
+    setUser(nextUser);
+    return nextUser;
+  }
+
+  return { user, loginUser, registerUser, logout, updateUser };
 }
