@@ -5,6 +5,18 @@
   overflow: auto;
   background: var(--mint);
   padding: 70px clamp(22px, 8vw, 125px);
+  animation: overlay-page-in 0.25s ease;
+}
+
+@keyframes overlay-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .mine-header {
