@@ -4,7 +4,8 @@ footer {
   padding: 40px clamp(22px, 8vw, 125px);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
+  gap: 30px;
   font-size: 12px;
 }
 
@@ -12,20 +13,45 @@ footer .brand {
   color: white;
 }
 
-footer p {
+footer .footer-main p {
   color: #a9c4ca;
+  margin-top: 10px;
 }
 
-footer > span {
+.footer-help {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-help-title {
+  color: white;
+  font: 11px "DM Mono", monospace;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.footer-help a {
+  color: #a9c4ca;
+  text-decoration: none;
+}
+
+.footer-help a:hover {
+  color: var(--lime);
+  text-decoration: underline;
+}
+
+.footer-copy {
   color: #70949b;
   font: 10px 'DM Mono', monospace;
+  white-space: nowrap;
 }
 
 @media (max-width: 850px) {
   footer {
     padding-bottom: 92px;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 24px;
   }
 }
 
