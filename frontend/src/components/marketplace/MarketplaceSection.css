@@ -64,6 +64,19 @@
   padding: 20px;
   background: var(--mint);
   border: 1px solid var(--line);
+  animation: filters-panel-in 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top;
+}
+
+@keyframes filters-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scaleY(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
 }
 
 .filters-panel label {
@@ -113,6 +126,7 @@
   color: var(--ink);
   border-radius: 20px;
   font-size: 12px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
 
 .category.active,
@@ -122,16 +136,46 @@
   color: white;
 }
 
+.category:active {
+  transform: scale(0.96);
+}
+
+.item-grid-wrap {
+  position: relative;
+  min-height: 60px;
+}
+
 .item-grid,
 .mine-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
+  transition: opacity 0.2s ease;
+}
+
+.item-grid.is-loading {
+  opacity: 0.5;
+}
+
+.item-card {
+  animation: item-card-in 0.35s ease both;
+}
+
+@keyframes item-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .empty-state {
   padding: 50px 0;
   color: #537078;
+  animation: filters-panel-in 0.25s ease;
 }
 
 @media (max-width: 850px) {

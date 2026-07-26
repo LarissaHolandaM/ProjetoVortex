@@ -3,6 +3,7 @@ import { CATEGORIAS } from "../../types";
 import type { Condicao, Item, Ordenacao, TipoNegociacao } from "../../types";
 import { CONDICAO_LABELS } from "../../utils/marketplace";
 import { ItemCard } from "./ItemCard";
+import { Spinner } from "../ui/Spinner";
 import "./MarketplaceSection.css";
 
 const CATEGORIAS_FILTRO = ["Todos", ...CATEGORIAS];
@@ -28,6 +29,7 @@ interface MarketplaceSectionProps {
   onClearSellerFilter: () => void;
   onClearFilters: () => void;
   items: Item[];
+  loading: boolean;
   onViewItem: (item: Item) => void;
   onToggleFavorite: (item: Item) => void;
   isFavorite: (item: Item) => boolean;
@@ -54,6 +56,7 @@ export function MarketplaceSection({
   onClearSellerFilter,
   onClearFilters,
   items,
+  loading,
   onViewItem,
   onToggleFavorite,
   isFavorite,
@@ -184,18 +187,27 @@ export function MarketplaceSection({
         </div>
       )}
 
-      <div className="item-grid">
-        {items.map((item) => (
-          <ItemCard
-            item={item}
-            key={item.id}
-            onView={onViewItem}
-            onToggleFavorite={onToggleFavorite}
-            isFavorite={isFavorite(item)}
-          />
-        ))}
+      <div className="item-grid-wrap">
+        {loading && (
+          <div className="spinner-overlay">
+            <Spinner size="small" />
+          </div>
+        )}
+        <div className={loading ? "item-grid is-loading" : "item-grid"}>
+          {items.map((item) => (
+            <ItemCard
+              item={item}
+              key={item.id}
+              onView={onViewItem}
+              onToggleFavorite={onToggleFavorite}
+              isFavorite={isFavorite(item)}
+            />
+          ))}
+        </div>
       </div>
-      {!items.length && <div className="empty-state">Nenhum item encontrado. Tente outro termo ou filtro.</div>}
+      {!loading && !items.length && (
+        <div className="empty-state">Nenhum item encontrado. Tente outro termo ou filtro.</div>
+      )}
     </section>
   );
 }

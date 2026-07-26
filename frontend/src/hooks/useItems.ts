@@ -6,6 +6,7 @@ import type { AdFormState, AnuncioFiltros, Item, Ordenacao, Usuario } from "../t
 export function useItems() {
   const [items, setItems] = useState<Item[]>([]);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [categorias, setCategorias] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [tipoNegociacao, setTipoNegociacao] = useState("todos");
@@ -43,15 +44,24 @@ export function useItems() {
   );
 
   useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
     const timeout = setTimeout(() => {
       fetchAnuncios(filtros, 40)
         .then((data) => {
+          if (cancelled) return;
           setItems(data.items);
           setTotal(data.total);
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
     }, 250);
-    return () => clearTimeout(timeout);
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
   }, [filtros]);
 
   function clearFilters() {
@@ -112,6 +122,7 @@ export function useItems() {
     items,
     filtered: items,
     total,
+    loading,
     categorias,
     toggleCategoria,
     query,

@@ -3,6 +3,7 @@ import { fetchFavoritos, fetchMeusAnuncios } from "../../api/client";
 import type { Item, ProfileFormState, StudentTab, Usuario } from "../../types";
 import { ItemCard } from "../marketplace/ItemCard";
 import { ProfileTab } from "./ProfileTab";
+import { Spinner } from "../ui/Spinner";
 import "./StudentArea.css";
 
 interface StudentAreaProps {
@@ -110,29 +111,39 @@ export function StudentArea({
         <ProfileTab user={user} onUpdateProfile={onUpdateProfile} onLogout={onLogout} />
       ) : (
         <>
-          <div className="item-grid mine-grid">
-            {list.map((item) => (
-              <ItemCard
-                item={item}
-                key={item.id}
-                onView={onViewItem}
-                onToggleFavorite={tab === "favoritos" ? handleUnfavorite : onToggleFavorite}
-                isFavorite={tab === "favoritos" ? true : isFavorite(item)}
-                showOwnerActions={tab === "meus"}
-                onEdit={onEdit}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
+          {(() => {
+            const isLoading = tab === "meus" ? loadingMeus : loadingFavoritos;
+            return (
+              <div className="item-grid-wrap">
+                {isLoading && (
+                  <div className="spinner-overlay">
+                    <Spinner size="small" />
+                  </div>
+                )}
+                <div className={isLoading ? "item-grid mine-grid is-loading" : "item-grid mine-grid"}>
+                  {list.map((item) => (
+                    <ItemCard
+                      item={item}
+                      key={item.id}
+                      onView={onViewItem}
+                      onToggleFavorite={tab === "favoritos" ? handleUnfavorite : onToggleFavorite}
+                      isFavorite={tab === "favoritos" ? true : isFavorite(item)}
+                      showOwnerActions={tab === "meus"}
+                      onEdit={onEdit}
+                      onDelete={handleDelete}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {tab === "meus" && !loadingMeus && !meusAnuncios.length && (
             <div className="empty-state">Você ainda não publicou nenhum item.</div>
           )}
-          {tab === "meus" && loadingMeus && <div className="empty-state">Carregando seus anúncios…</div>}
           {tab === "favoritos" && !loadingFavoritos && !favoritos.length && (
             <div className="empty-state">Você ainda não favoritou nenhum item.</div>
           )}
-          {tab === "favoritos" && loadingFavoritos && <div className="empty-state">Carregando favoritos…</div>}
         </>
       )}
     </div>

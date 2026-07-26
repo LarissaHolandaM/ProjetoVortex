@@ -55,6 +55,7 @@ function App() {
   const {
     filtered,
     total,
+    loading,
     categorias,
     toggleCategoria,
     query,
@@ -235,6 +236,7 @@ function App() {
           onClearSellerFilter={clearSellerFilter}
           onClearFilters={clearFilters}
           items={filtered}
+          loading={loading}
           onViewItem={handleViewItem}
           onToggleFavorite={handleToggleFavorite}
           isFavorite={isFavorite}
