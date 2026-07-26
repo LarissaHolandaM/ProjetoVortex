@@ -1,20 +1,27 @@
 import { useState } from "react";
 import { CATEGORIAS } from "../../types";
-import type { Item, Ordenacao, TipoNegociacao } from "../../types";
+import type { Condicao, Item, Ordenacao, TipoNegociacao } from "../../types";
+import { CONDICAO_LABELS } from "../../utils/marketplace";
 import { ItemCard } from "./ItemCard";
 import "./MarketplaceSection.css";
 
 const CATEGORIAS_FILTRO = ["Todos", ...CATEGORIAS];
 
 interface MarketplaceSectionProps {
-  category: string;
-  onCategoryChange: (category: string) => void;
+  categorias: string[];
+  onToggleCategoria: (categoria: string) => void;
   query: string;
   onQueryChange: (query: string) => void;
   tipoNegociacao: TipoNegociacao | "todos";
   onTipoNegociacaoChange: (tipo: TipoNegociacao | "todos") => void;
+  condicao: string;
+  onCondicaoChange: (condicao: string) => void;
   localizacao: string;
   onLocalizacaoChange: (localizacao: string) => void;
+  precoMin: string;
+  onPrecoMinChange: (preco: string) => void;
+  precoMax: string;
+  onPrecoMaxChange: (preco: string) => void;
   ordenacao: Ordenacao;
   onOrdenacaoChange: (ordenacao: Ordenacao) => void;
   sellerName: string;
@@ -27,14 +34,20 @@ interface MarketplaceSectionProps {
 }
 
 export function MarketplaceSection({
-  category,
-  onCategoryChange,
+  categorias,
+  onToggleCategoria,
   query,
   onQueryChange,
   tipoNegociacao,
   onTipoNegociacaoChange,
+  condicao,
+  onCondicaoChange,
   localizacao,
   onLocalizacaoChange,
+  precoMin,
+  onPrecoMinChange,
+  precoMax,
+  onPrecoMaxChange,
   ordenacao,
   onOrdenacaoChange,
   sellerName,
@@ -98,6 +111,41 @@ export function MarketplaceSection({
             </select>
           </label>
           <label>
+            Condição
+            <select value={condicao} onChange={(event) => onCondicaoChange(event.target.value)}>
+              <option value="todos">Todas</option>
+              {(Object.keys(CONDICAO_LABELS) as Condicao[]).map((item) => (
+                <option key={item} value={item}>
+                  {CONDICAO_LABELS[item]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Preço mínimo (R$)
+            <input
+              value={precoMin}
+              onChange={(event) => onPrecoMinChange(event.target.value)}
+              type="number"
+              min="0"
+              step="0.01"
+              inputMode="decimal"
+              placeholder="0,00"
+            />
+          </label>
+          <label>
+            Preço máximo (R$)
+            <input
+              value={precoMax}
+              onChange={(event) => onPrecoMaxChange(event.target.value)}
+              type="number"
+              min="0"
+              step="0.01"
+              inputMode="decimal"
+              placeholder="0,00"
+            />
+          </label>
+          <label>
             Localização
             <input
               value={localizacao}
@@ -112,15 +160,19 @@ export function MarketplaceSection({
       )}
 
       <div className="category-row">
-        {CATEGORIAS_FILTRO.map((item) => (
-          <button
-            className={category === item ? "category active" : "category"}
-            key={item}
-            onClick={() => onCategoryChange(item)}
-          >
-            {item}
-          </button>
-        ))}
+        {CATEGORIAS_FILTRO.map((item) => {
+          const active = item === "Todos" ? categorias.length === 0 : categorias.includes(item);
+          return (
+            <button
+              className={active ? "category active" : "category"}
+              key={item}
+              aria-pressed={active}
+              onClick={() => onToggleCategoria(item)}
+            >
+              {item}
+            </button>
+          );
+        })}
       </div>
 
       {sellerName && (

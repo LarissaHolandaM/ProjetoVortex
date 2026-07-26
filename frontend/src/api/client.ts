@@ -24,9 +24,14 @@ export function buildAnuncioQuery(filtros: AnuncioFiltros, limit: number): strin
   params.set("limit", String(limit));
 
   if (filtros.query) params.set("titulo", filtros.query);
-  if (filtros.categoria && filtros.categoria.toLowerCase() !== "todos") params.set("categoria", filtros.categoria);
+  (filtros.categorias || [])
+    .filter((categoria) => categoria.toLowerCase() !== "todos")
+    .forEach((categoria) => params.append("categoria", categoria));
   if (filtros.tipoNegociacao && filtros.tipoNegociacao !== "todos") params.set("tipo_negociacao", filtros.tipoNegociacao);
+  if (filtros.condicao && filtros.condicao !== "todos") params.set("condicao", filtros.condicao);
   if (filtros.localizacao) params.set("localizacao", filtros.localizacao);
+  if (filtros.precoMin !== undefined && !Number.isNaN(filtros.precoMin)) params.set("preco_min", String(filtros.precoMin));
+  if (filtros.precoMax !== undefined && !Number.isNaN(filtros.precoMax)) params.set("preco_max", String(filtros.precoMax));
   if (filtros.usuarioId !== undefined && filtros.usuarioId !== null) params.set("usuario_id", String(filtros.usuarioId));
 
   const { order_by, order_desc } = buildOrderParams(filtros.ordenacao);

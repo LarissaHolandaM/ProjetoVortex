@@ -6,24 +6,40 @@ import type { AdFormState, AnuncioFiltros, Item, Ordenacao, Usuario } from "../t
 export function useItems() {
   const [items, setItems] = useState<Item[]>([]);
   const [total, setTotal] = useState(0);
-  const [category, setCategory] = useState("Todos");
+  const [categorias, setCategorias] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [tipoNegociacao, setTipoNegociacao] = useState("todos");
+  const [condicaoFiltro, setCondicaoFiltro] = useState("todos");
   const [localizacao, setLocalizacao] = useState("");
+  const [precoMin, setPrecoMin] = useState("");
+  const [precoMax, setPrecoMax] = useState("");
   const [ordenacao, setOrdenacao] = useState<Ordenacao>("recentes");
   const [sellerId, setSellerId] = useState<Item["usuario_id"] | null>(null);
   const [sellerName, setSellerName] = useState<string>("");
 
+  function toggleCategoria(categoria: string) {
+    if (categoria === "Todos") {
+      setCategorias([]);
+      return;
+    }
+    setCategorias((prev) =>
+      prev.includes(categoria) ? prev.filter((item) => item !== categoria) : [...prev, categoria],
+    );
+  }
+
   const filtros: AnuncioFiltros = useMemo(
     () => ({
-      categoria: category,
+      categorias,
       query,
       tipoNegociacao,
+      condicao: condicaoFiltro !== "todos" ? condicaoFiltro : undefined,
       localizacao,
+      precoMin: precoMin !== "" ? Number(precoMin) : undefined,
+      precoMax: precoMax !== "" ? Number(precoMax) : undefined,
       ordenacao,
       usuarioId: sellerId ?? undefined,
     }),
-    [category, query, tipoNegociacao, localizacao, ordenacao, sellerId],
+    [categorias, query, tipoNegociacao, condicaoFiltro, localizacao, precoMin, precoMax, ordenacao, sellerId],
   );
 
   useEffect(() => {
@@ -39,10 +55,13 @@ export function useItems() {
   }, [filtros]);
 
   function clearFilters() {
-    setCategory("Todos");
+    setCategorias([]);
     setQuery("");
     setTipoNegociacao("todos");
+    setCondicaoFiltro("todos");
     setLocalizacao("");
+    setPrecoMin("");
+    setPrecoMax("");
     setOrdenacao("recentes");
     setSellerId(null);
     setSellerName("");
@@ -51,7 +70,7 @@ export function useItems() {
   function viewSellerItems(item: Item) {
     setSellerId(item.usuario_id);
     setSellerName(item.usuario_nome || "");
-    setCategory("Todos");
+    setCategorias([]);
   }
 
   function clearSellerFilter() {
@@ -93,14 +112,20 @@ export function useItems() {
     items,
     filtered: items,
     total,
-    category,
-    setCategory,
+    categorias,
+    toggleCategoria,
     query,
     setQuery,
     tipoNegociacao,
     setTipoNegociacao,
+    condicaoFiltro,
+    setCondicaoFiltro,
     localizacao,
     setLocalizacao,
+    precoMin,
+    setPrecoMin,
+    precoMax,
+    setPrecoMax,
     ordenacao,
     setOrdenacao,
     sellerId,
