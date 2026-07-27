@@ -138,6 +138,7 @@ npm run build
 ## Ferramentas utilizadas
 
 - ChatGPT
+- Claude
 - GitHub Copilot
 
 ## Engenharia de Prompts
@@ -154,6 +155,10 @@ npm run build
 
 > Vou colocar esse projeto em produção e queria uma revisão geral. Analise a estrutura do frontend e do backend, procure possíveis problemas de configuração, segurança ou organização e me diga o que você melhoraria antes de fazer o deploy definitivo. Se possível, explique o porquê de cada sugestão para eu conseguir aprender com as alterações.
 
+### Prompt 4 – Responsividade da Interface
+
+> Claude, o card da Central de Ajuda está desalinhado. Quando a tela fica menor ou é acessada pelo celular, ele se alinha corretamente, porém quando é aberto no navegador em tela cheia ele fica torto. Preciso que esse componente seja completamente responsivo, adaptando-se corretamente a qualquer resolução e tamanho de janela, sem comprometer o layout das demais seções da página. Além de corrigir o CSS, explique por que o problema acontece para que eu entenda a solução.
+
 ## Chats compartilhados
 
 1. https://chatgpt.com/share/6a63dfb3-03c0-83e9-8f93-77836ae856f9
@@ -162,15 +167,15 @@ npm run build
 
 ## Reflexão crítica
 
-Durante o desenvolvimento do Vortex Marketplace, a Inteligência Artificial foi utilizada como uma ferramenta de apoio para acelerar tarefas como organização da arquitetura, resolução de bugs, documentação e revisão de código. Apesar de ter contribuído significativamente para a produtividade, nem todas as sugestões fornecidas estavam corretas ou atendiam ao que havia sido solicitado.
+Durante o desenvolvimento do Vortex Marketplace, a Inteligência Artificial foi utilizada como uma ferramenta de apoio para acelerar tarefas como organização da arquitetura, resolução de bugs, revisão de código, documentação e refinamento da interface. Entretanto, em diversos momentos foi necessário exercer senso crítico sobre as respostas produzidas.
 
-Um dos principais exemplos ocorreu durante a implementação da tela de cadastro de usuários. Foi solicitado ao GitHub Copilot que auxiliasse na criação da interface e da lógica de cadastro. Entretanto, em vez de implementar apenas a funcionalidade requisitada, o Copilot sugeriu um fluxo completamente diferente: caso um usuário tentasse realizar login com um e-mail inexistente, o sistema realizaria automaticamente o cadastro desse usuário. Essa funcionalidade nunca havia sido especificada e, além de fugir dos requisitos do projeto, representava um comportamento inadequado para um sistema de autenticação, podendo causar problemas de segurança e inconsistências na experiência do usuário.
+Um dos principais exemplos ocorreu durante a implementação da tela de cadastro de usuários. Foi solicitado ao GitHub Copilot que auxiliasse na criação da interface e da lógica de cadastro. Em vez de implementar apenas a funcionalidade solicitada, a ferramenta sugeriu um fluxo em que um usuário inexistente seria automaticamente cadastrado ao tentar realizar login. Apesar de funcional do ponto de vista técnico, esse comportamento não fazia parte dos requisitos do sistema e ainda introduzia um problema de segurança e de experiência do usuário. A solução foi rejeitar essa abordagem e implementar um fluxo tradicional, separando claramente autenticação e cadastro.
 
-Outro desafio importante surgiu durante o deploy da aplicação. Após publicar o frontend na Vercel e o backend no Render, as requisições passaram a ser bloqueadas pela política de CORS do navegador. As primeiras sugestões fornecidas pela IA consistiam em liberar todas as origens (*) para resolver rapidamente o problema. Embora essa abordagem eliminasse o erro, ela comprometia a segurança da API e não representava uma solução adequada para um ambiente de produção.
+Outro desafio importante aconteceu durante o deploy da aplicação. Após publicar o frontend na Vercel e o backend no Render, todas as requisições passaram a ser bloqueadas pela política de CORS do navegador. As primeiras respostas da IA sugeriam liberar qualquer origem utilizando "*", solução que resolveria rapidamente o erro, porém comprometeria completamente a segurança da API. A partir da análise dos logs, da inspeção das requisições preflight (OPTIONS) e de um entendimento mais profundo da arquitetura da aplicação, foi possível fornecer mais contexto para a IA, que então auxiliou na configuração correta do CORSMiddleware permitindo apenas as origens autorizadas.
 
-A solução foi encontrada por meio da análise dos logs da aplicação, da inspeção das requisições no navegador e do entendimento do funcionamento das requisições preflight (OPTIONS). Com essas informações, foi possível orientar a IA com mais contexto sobre a arquitetura do projeto e configurar corretamente o CORSMiddleware, permitindo apenas as origens autorizadas.
+Também utilizei o Claude para solucionar um problema de responsividade na interface. Um dos cartões da Central de Ajuda apresentava um comportamento curioso: em dispositivos móveis e em janelas menores o alinhamento era correto, porém em resoluções maiores o componente ficava deslocado, prejudicando a aparência da página. Inicialmente a IA apresentou ajustes pontuais de CSS que não eliminavam completamente o problema. Após reformular o prompt, explicando exatamente em quais resoluções o erro ocorria e solicitando não apenas a correção, mas também a explicação da causa, foi possível identificar que o problema estava relacionado ao comportamento do layout responsivo e à distribuição dos elementos no container. Com esse contexto adicional, a solução passou a ser definitiva e o componente tornou-se adaptável a diferentes tamanhos de tela.
 
-Essas experiências reforçaram que a Inteligência Artificial é uma excelente ferramenta para aumentar a produtividade e auxiliar na resolução de problemas, mas não substitui o conhecimento técnico do desenvolvedor. Todas as sugestões incorporadas ao projeto foram analisadas, adaptadas e validadas manualmente, garantindo que a implementação final estivesse de acordo com os requisitos e com as boas práticas de desenvolvimento.
+Essas experiências reforçaram que a Inteligência Artificial funciona melhor como uma ferramenta de apoio do que como um substituto do desenvolvedor. Em praticamente todos os casos foi necessário validar manualmente o código sugerido, testar diferentes cenários, compreender as alterações realizadas e, muitas vezes, reformular os prompts para fornecer contexto suficiente até que a solução estivesse alinhada aos requisitos do projeto. Esse processo tornou o desenvolvimento mais produtivo sem abrir mão da compreensão técnica e da qualidade da implementação.
 
 # Estrutura
 
