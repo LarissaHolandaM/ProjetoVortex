@@ -1,6 +1,13 @@
 .marketplace-section {
   padding: 120px clamp(22px, 8vw, 125px);
   background: white;
+  scroll-margin-top: 82px;
+}
+
+@media (max-width: 850px) {
+  .marketplace-section {
+    scroll-margin-top: 68px;
+  }
 }
 
 .section-heading {

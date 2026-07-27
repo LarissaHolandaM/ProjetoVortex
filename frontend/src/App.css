@@ -1,3 +1,13 @@
 .app-shell {
   overflow: hidden;
 }
+
+main {
+  padding-top: 82px;
+}
+
+@media (max-width: 850px) {
+  main {
+    padding-top: 68px;
+  }
+}
