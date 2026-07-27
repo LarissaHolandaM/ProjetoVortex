@@ -38,6 +38,7 @@
   color: #506876;
   line-height: 1.6;
   margin-bottom: 18px;
+  overflow-wrap: anywhere;
 }
 
 .item-detail-meta {
