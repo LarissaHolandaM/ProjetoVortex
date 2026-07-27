@@ -4,6 +4,7 @@ import "./Header.css";
 interface HeaderProps {
   user: Usuario | null;
   onNavigateHome: () => void;
+  onExplore: () => void;
   onScrollToHowItWorks: () => void;
   onOpenProfile: () => void;
   onOpenPublish: () => void;
@@ -12,6 +13,7 @@ interface HeaderProps {
 export function Header({
   user,
   onNavigateHome,
+  onExplore,
   onScrollToHowItWorks,
   onOpenProfile,
   onOpenPublish,
@@ -25,7 +27,7 @@ export function Header({
         </span>
       </button>
       <nav className="desktop-nav" aria-label="Navegação principal">
-        <button onClick={onNavigateHome}>Explorar</button>
+        <button onClick={onExplore}>Explorar</button>
         <button onClick={onScrollToHowItWorks}>Como funciona</button>
         <button onClick={onOpenProfile}>Meus anúncios</button>
       </nav>

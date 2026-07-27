@@ -82,28 +82,6 @@
   gap: 12px;
 }
 
-.button-outline {
-  background: transparent;
-  color: var(--green);
-  border: 1px solid var(--green);
-}
-
-.button-outline:hover {
-  background: var(--green);
-  color: white;
-  transform: translateY(-2px);
-}
-
-.button-outline.danger {
-  color: #c1364a;
-  border-color: #c1364a;
-}
-
-.button-outline.danger:hover {
-  background: #c1364a;
-  color: white;
-}
-
 @media (max-width: 500px) {
   .item-detail-actions {
     flex-direction: column;

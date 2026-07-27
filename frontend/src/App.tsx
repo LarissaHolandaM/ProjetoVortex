@@ -10,6 +10,7 @@ import { AuthModal } from "./components/modals/AuthModal";
 import { PublishModal } from "./components/modals/PublishModal";
 import { ItemDetailModal } from "./components/modals/ItemDetailModal";
 import { HelpModal } from "./components/modals/HelpModal";
+import { ConfirmModal } from "./components/modals/ConfirmModal";
 import { StudentArea } from "./components/student/StudentArea";
 import { Toast } from "./components/ui/Toast";
 import { useAuth } from "./hooks/useAuth";
@@ -88,6 +89,7 @@ function App() {
   const [form, setForm] = useState<AdFormState>(emptyForm);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<Item | null>(null);
   const [meusRefreshKey, setMeusRefreshKey] = useState(0);
 
   const goHome = () => setView("home");
@@ -108,6 +110,10 @@ function App() {
     setModal("publish");
   };
   const scrollToId = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const explorarAnuncios = () => {
+    setView("home");
+    setTimeout(() => scrollToId("marketplace"), 50);
+  };
 
   const updateForm = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -166,9 +172,13 @@ function App() {
     setModal("publish");
   }
 
-  async function handleDeleteItem(item: Item) {
-    const confirmed = window.confirm(`Remover "${item.titulo}"? Essa ação não pode ser desfeita.`);
-    if (!confirmed) return;
+  function handleDeleteItem(item: Item) {
+    setItemToDelete(item);
+  }
+
+  async function confirmDeleteItem() {
+    if (!itemToDelete) return;
+    const item = itemToDelete;
     try {
       await remove(item.id);
       setSelectedItem(null);
@@ -176,6 +186,8 @@ function App() {
       setMeusRefreshKey((prev) => prev + 1);
     } catch (error) {
       setNotice(errorMessage(error, "Não foi possível remover o anúncio."));
+    } finally {
+      setItemToDelete(null);
     }
   }
 
@@ -207,6 +219,7 @@ function App() {
       <Header
         user={user}
         onNavigateHome={goHome}
+        onExplore={explorarAnuncios}
         onScrollToHowItWorks={() => scrollToId("how-it-works")}
         onOpenProfile={openProfile}
         onOpenPublish={openPublish}
@@ -289,6 +302,17 @@ function App() {
           onEdit={handleEditItem}
           onDelete={handleDeleteItem}
           onViewSellerItems={handleViewSellerItems}
+        />
+      )}
+
+      {itemToDelete && (
+        <ConfirmModal
+          title={`Remover "${itemToDelete.titulo}"?`}
+          message="Essa ação não pode ser desfeita."
+          confirmLabel="Remover anúncio"
+          cancelLabel="Cancelar"
+          onConfirm={confirmDeleteItem}
+          onCancel={() => setItemToDelete(null)}
         />
       )}
 
